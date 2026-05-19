@@ -17,6 +17,26 @@
       "category": "dialogue-discipline",
       "keywords": ["focus", "discussion", "discipline", "dialogue", "anti-divergence", "chinese"],
       "skills": ["./skills/focused-discussion"]
+    },
+    {
+      "name": "archive-session",
+      "description": "会话归档 —— 当对话变长、主题变多、工作完成、准备交接或用户说归档/收尾时,把上下文压缩进项目 docs,不新增分析和方案。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "context-management",
+      "keywords": ["archive", "handoff", "context", "docs", "session", "memory", "chinese"],
+      "skills": ["./skills/archive-session"]
+    },
+    {
+      "name": "focused-reading",
+      "description": "专注阅读 —— 读取文档、源码、PR、日志、网页、图文或长上下文时只回答用户当前问题,不扩题。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "reading-discipline",
+      "keywords": ["reading", "docs", "context", "review", "summarize", "scrape", "chinese"],
+      "skills": ["./skills/focused-reading"]
     }
   ]
 }

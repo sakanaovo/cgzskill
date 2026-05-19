@@ -1,0 +1,4 @@
+interface:
+  display_name: "Focused Reading"
+  short_description: "Read docs, code, PRs, and long context without drifting"
+  default_prompt: "Read this material and answer only the stated question."

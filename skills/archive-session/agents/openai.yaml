@@ -1,0 +1,4 @@
+interface:
+  display_name: "Archive Session"
+  short_description: "Archive discussion context without adding new analysis"
+  default_prompt: "Archive the current discussion into a concise project note."
