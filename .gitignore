@@ -4,3 +4,7 @@
 .idea/
 .vscode/
 node_modules/
+
+# 个人本地使用,不发开源仓库
+AGENTS.md
+CLAUDE.md
