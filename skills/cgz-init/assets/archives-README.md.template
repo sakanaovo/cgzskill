@@ -1,0 +1,17 @@
+# docs/archives/
+
+本目录由 [`archive-session`](https://github.com/sakanaovo/cgzskill) skill 写入。
+
+每个文件是一次会话、迭代、阅读上下文或交接的归档，命名约定：
+
+```
+YYYY-MM-DD-[topic].md
+```
+
+归档格式见 `archive-session` skill 的 `references/archive-spec.md`。
+
+**禁止**：
+
+- 禁止人工编辑归档文件覆盖历史（追加新小节可以）。
+- 禁止把业务文档放进本目录。
+- 禁止把临时草稿留在这里 —— 草稿写别处。

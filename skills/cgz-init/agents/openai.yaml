@@ -1,0 +1,4 @@
+interface:
+  display_name: "cgz Init"
+  short_description: "Bootstrap the cgz memory architecture in a project — scan, ask, then generate"
+  default_prompt: "Scan whether AGENTS.md, docs/ai-lessons.md, and docs/archives/ exist. List what is present and what is missing, then ask before generating anything."

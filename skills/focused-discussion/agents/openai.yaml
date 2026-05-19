@@ -1,0 +1,4 @@
+interface:
+  display_name: "Focused Discussion"
+  short_description: "Keep project discussions convergent — no ABCD options, no unsolicited estimates, no drifting"
+  default_prompt: "Close the user's current question first. Do not expand into side topics, options, or estimates unless asked."

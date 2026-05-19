@@ -5,6 +5,9 @@
 .vscode/
 node_modules/
 
-# 个人本地使用,不发开源仓库
+# Claude Code 本地工作区，不进开源仓
+.claude/
+
+# 维护者本地 agent 上下文，不分发给端用户
 AGENTS.md
 CLAUDE.md

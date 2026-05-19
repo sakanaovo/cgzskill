@@ -23,34 +23,63 @@
 | Plugin / Skill | 用途 | 自动触发 | 显式触发 |
 |----------------|------|---------|---------|
 | **`focused-discussion`** | 对话纪律 —— 强制 Claude 单线收敛,禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级。专治"一对话就跑偏"。 | 用户讨论 PR / 产品 / 架构 / UX 时;或说「跑偏了」「聚焦」「先停一下」「先看反馈」 | `/focused-discussion` |
-| **`archive-session`** | 会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文写进项目 docs,不新增分析。 | 用户说「归档」「收尾」「先到这」「handoff」;或 agent 自检发现上下文过长/分支过多时先建议归档 | `/archive-session` |
-| **`focused-reading`** | 专注阅读 —— 看文档、源码、PR、日志、网页、图文和长上下文时,只回答当前问题。 | 用户说「读一下」「看看文档」「理解上下文」「看这个 PR/日志/图文」 | `/focused-reading` |
+| **`archive-session`** | 会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文写进项目 docs,禁止新增分析。 | 用户说「归档」「收尾」「先到这」「交接」;或 agent 自检发现上下文过长 / 分支过多时主动建议归档 | `/archive-session` |
+| **`focused-reading`** | 专注阅读 —— 看文档、源码、PR、日志、网页、图文和长上下文时只回答当前问题,禁止扩题。 | 用户说「读一下」「看看文档」「理解上下文」「看这个 PR / 日志 / 图文」 | `/focused-reading` |
+| **`cgz-init`** | 启动检测 —— 在新项目里扫描 `AGENTS.md` / `docs/ai-lessons.md` / `docs/archives/` 是否就位,缺失则询问后生成;同时询问并写入 `obsidian_vault` 配置供 daily-recap 使用。一次性操作。 | 用户说「初始化 cgz」「启动 cgz」「让 AI 学这套」;或在新项目首次调用其他 cgz skill 但缺记忆架构时主动建议 | `/cgz-init` |
+| **`daily-recap`** | 每日复盘 —— 按天聚合当日 `docs/archives/` / `docs/ai-lessons.md` / 会话上下文,写一份 Obsidian 友好的 `Daily/YYYY-MM-DD.md`(YAML frontmatter + `[[wikilinks]]`)到 `obsidian_vault`。 | 用户说「今天复盘」「收尾今天」「daily recap」「日报」;或当天首次启动检测到昨天有未复盘归档时主动建议 | `/daily-recap` |
+
+> 五个 skill 共用同一份骨架(写在各自 `references/`):**五原则 / 五维度 / 五心理学 / 对话严苛规则 / 语言纯化规则**。SKILL.md 是入口,references 是判定依据。
+>
+> **整体设计**:`cgz-init` 在项目里铺好「记忆架构」(AGENTS.md / docs/ai-lessons.md / docs/archives/) + 配置 `obsidian_vault`;`focused-reading` / `focused-discussion` / `archive-session` 在每次会话里读写这套记忆;`daily-recap` 按天把当日上下文聚合成 Obsidian Daily note。AI 不能自动学习,但下次启动读到这些文件就「像学会了」。
 
 ## 仓库结构
 
 ```
 cgzskill/
 ├── .claude-plugin/
-│   └── marketplace.json         # Marketplace manifest(列出所有可装 plugin)
-├── README.md
-├── LICENSE
-├── .gitignore
+│   └── marketplace.json              # Marketplace manifest(列出所有可装 plugin)
 ├── .github/
-│   ├── workflows/validate-skills.yml
-│   └── scripts/validate_skills.py
-└── skills/
-    ├── focused-discussion/
-    │   ├── SKILL.md
-    │   └── references/discussion-discipline.md
-    ├── archive-session/
-    │   ├── SKILL.md
-    │   ├── agents/openai.yaml
-    │   └── references/archive-spec.md
-    └── focused-reading/
-        ├── SKILL.md
-        ├── agents/openai.yaml
-        └── references/reading-spec.md
+│   ├── workflows/validate-skills.yml # CI:每次 push / PR 校验 skill spec
+│   ├── scripts/validate_skills.py
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── ISSUE_TEMPLATE/{bug_report,skill_request}.md
+├── scripts/
+│   └── bump.py                       # npm 风格版本管理:bump + CHANGELOG + release
+├── docs/
+│   └── ai-self-evolution-architecture.md  # 四个 skill 的闭环说明
+├── skills/
+│   ├── focused-discussion/
+│   │   ├── SKILL.md                  # 入口:触发、形状、收束句式
+│   │   ├── agents/openai.yaml        # Codex 等 OpenAI 兼容 host 的元数据
+│   │   └── references/discussion-discipline.md  # 判定依据:五大节骨架
+│   ├── archive-session/
+│   │   ├── SKILL.md
+│   │   ├── agents/openai.yaml
+│   │   └── references/archive-spec.md
+│   ├── focused-reading/
+│   │   ├── SKILL.md
+│   │   ├── agents/openai.yaml
+│   │   └── references/reading-spec.md
+│   ├── cgz-init/
+│   │   ├── SKILL.md
+│   │   ├── agents/openai.yaml
+│   │   ├── references/init-spec.md
+│   │   └── assets/                   # 生成到用户项目的模板
+│   │       ├── AGENTS.md.template
+│   │       ├── ai-lessons.md.template
+│   │       └── archives-README.md.template
+│   └── daily-recap/
+│       ├── SKILL.md
+│       ├── agents/openai.yaml
+│       └── references/recap-spec.md
+├── CONTRIBUTING.md                   # 加新 skill 的流程与硬性要求
+├── CHANGELOG.md                      # 版本变更记录
+├── LICENSE                           # MIT
+├── README.md
+└── .gitignore
 ```
+
+每个 skill 的 `references/` 都遵循同一份**五大节骨架**:五原则 / 五维度 / 五心理学 / 对话严苛规则 / 语言纯化规则。新 skill 的 references 必须沿用,见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
 
 ---
 
@@ -58,11 +87,25 @@ cgzskill/
 
 ### Claude Code:三种姿势
 
-| 场景 | 命令 |
-|------|------|
-| **A. Marketplace 安装**(推荐) | `/plugin marketplace add sakanaovo/cgzskill` 然后 `/plugin install focused-discussion@cgzskill` |
-| **B. 本地 plugin-dir 调试**(开发模式) | `git clone https://github.com/sakanaovo/cgzskill.git && claude --plugin-dir ./cgzskill` |
-| **C. 退化到 standalone skill**(不用 plugin / marketplace) | `cp -r skills/<skill-name> ~/.claude/skills/`(或项目 `.claude/skills/`) |
+**A. Marketplace 安装(推荐)**
+
+```bash
+/plugin marketplace add sakanaovo/cgzskill
+/plugin install focused-discussion@cgzskill
+```
+
+**B. 本地 plugin-dir 调试(开发模式)**
+
+```bash
+git clone https://github.com/sakanaovo/cgzskill.git
+claude --plugin-dir ./cgzskill
+```
+
+**C. 退化到 standalone skill(不用 plugin / marketplace)**
+
+```bash
+cp -r skills/<skill-name> ~/.claude/skills/   # 或项目内的 .claude/skills/
+```
 
 > 提交到 Anthropic 官方 marketplace 让 `/plugin install` 直接生效:https://claude.ai/settings/plugins/submit
 
@@ -86,47 +129,14 @@ cat skills/focused-discussion/SKILL.md >> /path/to/your-project/AGENTS.md
 
 ---
 
-## 新 skill 加进 marketplace 的流程
+## 贡献
 
-每个新 skill 先从自己的真实使用场景出发,把反复出现的问题沉淀成一套简洁规则,再按 Agent Skills 规范整理成目录:
+欢迎 issue / PR。完整流程、五大节骨架要求、命名合规与提交规范见 [`CONTRIBUTING.md`](CONTRIBUTING.md);版本变更记录见 [`CHANGELOG.md`](CHANGELOG.md)。
 
-1. 把 skill 目录放到 `skills/<skill-name>/SKILL.md`
-2. `name` 字段同步父目录名(spec 硬性要求)
-3. 在 `.claude-plugin/marketplace.json` 的 `plugins` 数组里加一条:
-   ```json
-   {
-     "name": "<skill-name>",
-     "description": "...",
-     "source": "./",
-     "strict": false,
-     "version": "1.0.0",
-     "category": "...",
-     "keywords": ["..."],
-     "skills": ["./skills/<skill-name>"]
-   }
-   ```
-4. 提 PR → CI 校验通过 → 合并
-
----
-
-## CI
-
-每次 push / PR 自动跑 `.github/scripts/validate_skills.py`,校验:
-
-- SKILL.md 存在
-- YAML frontmatter 合法
-- `name` 字段 = 父目录名,kebab-case,≤ 64 字符
-- `description` ≤ 1024 字符
-- SKILL.md 正文 ≤ 500 行(超出建议拆 `references/`)
+每次 push / PR 都会自动跑 `.github/scripts/validate_skills.py`,校验 SKILL.md 是否符合 Agent Skills spec。
 
 ---
 
 ## License
 
 MIT
-
----
-
-## Contributing
-
-欢迎 issue / PR。新 skill 需要来自真实使用场景,加进 `skills/` + 在 `marketplace.json` 加一条,过 CI 校验就能合。

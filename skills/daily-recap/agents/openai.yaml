@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daily Recap"
+  short_description: "Aggregate today's archives, lessons, and decisions into an Obsidian-friendly Daily note"
+  default_prompt: "Read today's archives and lessons, then write Daily/YYYY-MM-DD.md to the obsidian_vault configured in AGENTS.md. Use YAML frontmatter and wikilinks. Do not invent content or links."
