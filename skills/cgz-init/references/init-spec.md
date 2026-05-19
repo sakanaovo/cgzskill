@@ -100,7 +100,7 @@ cgz 记忆体系已就位。
 | 教训日志 | `docs/ai-lessons.md` | 必须 |
 | 归档目录 | `docs/archives/` | 必须 |
 | 归档目录索引 | `docs/archives/README.md` | 可选；为空目录提供说明 |
-| Obsidian vault 配置 | `AGENTS.md` 的 `## cgz 配置` 段里 `obsidian_vault` 值 | 必须；空值表示禁用 daily-recap |
+| Obsidian vault 配置 | `AGENTS.md` 的 `## cgz 配置` 段里 `obsidian_vault` 值 | 必须；空值表示禁用 cgz-daily-recap |
 
 **判断「已存在」的标准**：
 
@@ -145,7 +145,7 @@ cgz 记忆体系已就位。
 
 **目录缺失** → `mkdir -p docs/archives/`。
 
-**目录为空** → 询问是否放一个最小 `README.md`（内容：「本目录由 `archive-session` skill 写入，每个文件是一次会话或迭代的归档。」）。
+**目录为空** → 询问是否放一个最小 `README.md`（内容：「本目录由 `cgz-archive-session` skill 写入，每个文件是一次会话或迭代的归档。」）。
 
 ### `CLAUDE.md`（可选）
 

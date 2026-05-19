@@ -1,6 +1,6 @@
 ---
-name: focused-reading
-description: "Read documents, code, PRs, issues, logs, webpages, screenshots, exported chats, or long context while staying on the user's stated question. Use when the user asks to read, review, understand, summarize, inspect, compare, or extract from materials without drifting into broad tutorials, unrelated findings, implementation plans, or unsolicited recommendations."
+name: cgz-focused-reading
+description: "阅读文档、代码、合并请求、问题、日志、网页、截图、导出聊天或长上下文时，只回答用户当前问题。用户要求读取、审阅、理解、总结、检查、对比、提取信息时使用；禁止扩题成教程、实现计划或主动建议。"
 ---
 
 # 专注阅读
@@ -62,7 +62,7 @@ description: "Read documents, code, PRs, issues, logs, webpages, screenshots, ex
 
 ## 何时切到归档
 
-阅读本身只负责回答当前问题。出现以下情况立刻停止扩展阅读，建议切到 `archive-session`：
+阅读本身只负责回答当前问题。出现以下情况立刻停止扩展阅读，建议切到 `cgz-archive-session`：
 
 - 用户说「归档 / 收尾 / 给下次看 / 保存上下文 / 交接」。
 - 本轮读了多个文档、网页、PR、日志或长聊天。

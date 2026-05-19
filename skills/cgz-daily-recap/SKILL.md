@@ -1,13 +1,13 @@
 ---
-name: daily-recap
-description: "Generate an Obsidian-friendly daily recap (Markdown with YAML frontmatter and [[wikilinks]]) from today's archives, lesson log, and current session. Use when the user says today recap, 今天复盘, 收尾今天, daily recap, 日报, or when a new day begins with unreviewed archives from yesterday. Writes to the obsidian_vault path configured in AGENTS.md."
+name: cgz-daily-recap
+description: "根据当天归档、教训日志和当前会话生成 Obsidian 友好的每日复盘 Markdown（YAML frontmatter + [[wikilinks]]）。用户说今天复盘、收尾今天、每日复盘、日报，或新一天发现昨天有未复盘归档时使用；写入 AGENTS.md 配置的 obsidian_vault。"
 ---
 
 # 每日复盘
 
 按天聚合当日上下文，写一份 Obsidian 友好的 `Daily/YYYY-MM-DD.md`。
 
-跟 `archive-session` 的区别：archive 是**单次**会话归档（每发生一次写一份），daily-recap 是**按天**聚合（每天一份，串当天所有归档）。
+跟 `cgz-archive-session` 的区别：cgz-archive-session 是**单次**会话归档（每发生一次写一份），cgz-daily-recap 是**按天**聚合（每天一份，串当天所有归档）。
 
 ## 入口与依据
 
@@ -25,7 +25,7 @@ description: "Generate an Obsidian-friendly daily recap (Markdown with YAML fron
 
 显式触发：
 
-- `/daily-recap`
+- `/cgz-daily-recap`
 - 用户说：「今天复盘」「收尾今天」「today recap」「daily recap」「日报」
 
 自检触发（agent 主动建议，仍需用户确认）：
@@ -46,13 +46,13 @@ description: "Generate an Obsidian-friendly daily recap (Markdown with YAML fron
 ```text
 ## cgz 配置
 
-- Obsidian vault: `~/Obsidian/cgz`（daily-recap 写到此目录下的 `Daily/YYYY-MM-DD.md`）
+- Obsidian vault: `~/Obsidian/cgz`（cgz-daily-recap 写到此目录下的 `Daily/YYYY-MM-DD.md`）
 ```
 
 未配置时不写文件，直接提示：
 
 ```text
-AGENTS.md 缺 cgz 配置段（obsidian_vault）。先跑 /cgz-init 补上，再回来跑 daily-recap。
+AGENTS.md 缺 cgz 配置段（obsidian_vault）。先跑 /cgz-init 补上，再回来跑 cgz-daily-recap。
 ```
 
 ## 数据源（只读落地文件，禁止凭记忆）
@@ -137,4 +137,4 @@ related:
 - 禁止从记忆里编归档内容，所有事实必须来自落地文件。
 - 禁止编 wikilink 指向不存在的文件。
 - 禁止把当天没发生的事写进复盘。
-- 禁止把 `archive-session` 已经写过的细节重抄一遍，复盘是索引不是重复。
+- 禁止把 `cgz-archive-session` 已经写过的细节重抄一遍，复盘是索引不是重复。

@@ -7,7 +7,7 @@ labels: bug
 
 ## 涉及的 skill
 
-<!-- focused-discussion / focused-reading / archive-session / 其他 -->
+<!-- cgz-focused-discussion / cgz-focused-reading / cgz-archive-session / cgz-init / cgz-daily-recap / 其他 -->
 
 ## 复现
 

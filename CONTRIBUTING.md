@@ -44,20 +44,20 @@ description: "1-1024 字符。描述「做什么 + 何时用」，必须含触�
 
 参考实现：
 
-- [`skills/focused-discussion/references/discussion-discipline.md`](skills/focused-discussion/references/discussion-discipline.md)
-- [`skills/focused-reading/references/reading-spec.md`](skills/focused-reading/references/reading-spec.md)
-- [`skills/archive-session/references/archive-spec.md`](skills/archive-session/references/archive-spec.md)
+- [`skills/cgz-focused-discussion/references/discussion-discipline.md`](skills/cgz-focused-discussion/references/discussion-discipline.md)
+- [`skills/cgz-focused-reading/references/reading-spec.md`](skills/cgz-focused-reading/references/reading-spec.md)
+- [`skills/cgz-archive-session/references/archive-spec.md`](skills/cgz-archive-session/references/archive-spec.md)
 
 ### 4. agents/openai.yaml 必填
 
 ```yaml
 interface:
   display_name: "Skill Title"
-  short_description: "One-liner without trailing period"
-  default_prompt: "Single-sentence instruction when host invokes the skill"
+  short_description: "一句中文短描述，不加句号"
+  default_prompt: "host 调用 skill 时使用的一句中文指令"
 ```
 
-三个 skill 都必须有这份文件，字段完整。
+每个 skill 都必须有这份文件，字段完整。
 
 ### 5. 注册到 marketplace
 
@@ -106,7 +106,7 @@ interface:
 - `ci` —— CI / 校验脚本
 - `chore` —— 杂项
 
-近期参考：`e774b82 feat: add archive-session + focused-reading skills, restructure`
+近期参考：`e774b82 feat: add cgz-archive-session + cgz-focused-reading skills, restructure`
 
 ### PR 流程
 
@@ -139,7 +139,7 @@ interface:
 python scripts/bump.py --status
 
 # 2. 改完代码后,每个动过的 plugin bump 一次
-python scripts/bump.py focused-discussion --minor --note "Added X feature"
+python scripts/bump.py cgz-focused-discussion --minor --note "Added X feature"
 python scripts/bump.py cgz-init --patch --note "Fix scan order"
 
 # 3. 把 [Unreleased] 切成新版本段

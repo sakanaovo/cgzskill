@@ -1,6 +1,6 @@
 # docs/archives/
 
-本目录由 [`archive-session`](https://github.com/sakanaovo/cgzskill) skill 写入。
+本目录由 [`cgz-archive-session`](https://github.com/sakanaovo/cgzskill) skill 写入。
 
 每个文件是一次会话、迭代、阅读上下文或交接的归档，命名约定：
 
@@ -8,7 +8,7 @@
 YYYY-MM-DD-[topic].md
 ```
 
-归档格式见 `archive-session` skill 的 `references/archive-spec.md`。
+归档格式见 `cgz-archive-session` skill 的 `references/archive-spec.md`。
 
 **禁止**：
 

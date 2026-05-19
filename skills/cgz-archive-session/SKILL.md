@@ -1,6 +1,6 @@
 ---
-name: archive-session
-description: "Archive a finished, long, drifting, or handoff-ready Claude/Codex session into durable project docs without adding new analysis. Use when the user says archive, 收尾, 归档, 先到这, 跑偏了, 保存上下文, handoff, summarize this session, or when the conversation has accumulated many decisions/files, context is getting long, multiple topics are open, work was completed, or future agents need a compact record."
+name: cgz-archive-session
+description: "把已完成、过长、跑偏或准备交接的 Claude/Codex 会话归档到项目文档，只保留事实和下一步，不新增分析。用户说归档、收尾、先到这、保存上下文、交接，或对话累积多个决策、文件、未决问题时使用。"
 ---
 
 # 会话归档

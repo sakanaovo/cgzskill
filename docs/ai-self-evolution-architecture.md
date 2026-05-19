@@ -22,9 +22,9 @@
 - 禁止让归档变成新一轮分析。
 - 禁止把用户没确认的偏好固化成规则。
 
-## 五大节骨架（贯穿三个 skill）
+## 五大节骨架（贯穿五个 skill）
 
-三个 skill 的判定依据都写在各自的 `references/`，遵循同一份骨架：
+五个 skill 的判定依据都写在各自的 `references/`，遵循同一份骨架：
 
 1. **五原则** —— 必须遵守的核心约束
 2. **五维度** —— 发送或写入前的硬性自检
@@ -36,13 +36,29 @@
 
 ## 核心闭环
 
-### 1. 读取
+### 1. 初始化
+
+新项目先扫描并建立项目级记忆骨架，确保后续读取、讨论、归档和复盘都有落点。
+
+对应 skill：
+
+- `cgz-init`
+
+初始化只负责：
+
+- 检查 `AGENTS.md`
+- 检查 `docs/ai-lessons.md`
+- 检查 `docs/archives/`
+- 询问 `obsidian_vault` 配置
+- 缺什么补什么，不覆盖已有文件
+
+### 2. 读取
 
 AI 先读取用户指定材料，只回答当前问题。
 
 对应 skill：
 
-- `focused-reading`
+- `cgz-focused-reading`
 
 输入包括：
 
@@ -60,13 +76,13 @@ AI 先读取用户指定材料，只回答当前问题。
 - 未验证点
 - 下一步入口
 
-### 2. 讨论
+### 3. 讨论
 
 AI 在讨论中保持单线收敛，先闭合用户当前问题，禁止主动扩展方案树。
 
 对应 skill：
 
-- `focused-discussion`
+- `cgz-focused-discussion`
 
 主要约束：
 
@@ -76,13 +92,13 @@ AI 在讨论中保持单线收敛，先闭合用户当前问题，禁止主动�
 - 当前问题没闭合，禁止抛新问题。
 - 对话变长或变散时立刻建议归档。
 
-### 3. 归档
+### 4. 归档
 
 对话变长、工作完成、上下文准备交接，或用户说「归档 / 收尾 / 先到这」时，把本轮上下文写进项目记忆。
 
 对应 skill：
 
-- `archive-session`
+- `cgz-archive-session`
 
 归档只保存：
 
@@ -101,7 +117,7 @@ AI 在讨论中保持单线收敛，先闭合用户当前问题，禁止主动�
 - 大段原文
 - 新增方案与额外分析
 
-### 4. 沉淀
+### 5. 沉淀
 
 归档后的内容按稳定程度进入不同位置。
 
@@ -117,7 +133,17 @@ AI 在讨论中保持单线收敛，先闭合用户当前问题，禁止主动�
 
 稳定规则才能进入 `AGENTS.md` 或 skill。一次性的上下文只进归档。
 
-### 5. 复用
+### 6. 复盘
+
+当天结束或用户要求复盘时，把当天归档与教训聚合成 Obsidian Daily note。
+
+对应 skill：
+
+- `cgz-daily-recap`
+
+复盘只做索引和当天事实聚合，禁止重新分析、补方案或跨天混写。
+
+### 7. 复用
 
 下一轮 AI 启动时，通过读取项目说明、skill 与 docs 恢复上下文。
 
@@ -148,25 +174,32 @@ AI 在讨论中保持单线收敛，先闭合用户当前问题，禁止主动�
 
 ## 最小实现
 
-当前仓库已有三块：
+当前仓库已有五块：
 
 ```text
-focused-reading
+cgz-init
+  负责初始化项目记忆骨架
+
+cgz-focused-reading
   负责读材料不发散
 
-focused-discussion
+cgz-focused-discussion
   负责讨论不发散
 
-archive-session
+cgz-archive-session
   负责把值得保留的上下文写成项目记忆
+
+cgz-daily-recap
+  负责按天聚合归档和教训
 ```
 
 调用关系：
 
 ```text
-读材料过长 → focused-reading 建议 archive-session
-讨论跑偏 → focused-discussion 建议 archive-session
-归档完成 → archive-session 只给短摘要
+读材料过长 → cgz-focused-reading 建议 cgz-archive-session
+讨论跑偏 → cgz-focused-discussion 建议 cgz-archive-session
+归档完成 → cgz-archive-session 只给短摘要
+当天收尾 → cgz-daily-recap 聚合当日落地记录
 稳定经验 → 经人确认后再写入 AGENTS.md 或 skill
 ```
 

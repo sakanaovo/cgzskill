@@ -1,6 +1,6 @@
 # 每日复盘规范
 
-daily-recap 的目标：把当天散落的归档、教训、决策聚合成一份 Obsidian 友好的 Daily note。本文件是判定依据，分五大节。
+cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成一份 Obsidian 友好的 Daily note。本文件是判定依据，分五大节。
 
 ---
 
@@ -101,7 +101,7 @@ daily-recap 的目标：把当天散落的归档、教训、决策聚合成一�
 | 状态 | 行为 |
 | --- | --- |
 | 段落存在且 `obsidian_vault` 有值 | 用该路径继续 |
-| 段落存在但 `obsidian_vault` 空 | 提示：「daily-recap 已禁用（vault 留空）」，不写文件 |
+| 段落存在但 `obsidian_vault` 空 | 提示：「cgz-daily-recap 已禁用（vault 留空）」，不写文件 |
 | 段落不存在 | 提示：「先跑 /cgz-init 补 cgz 配置段，再回来」 |
 
 **禁止**：

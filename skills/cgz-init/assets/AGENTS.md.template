@@ -10,18 +10,18 @@
 
 ### 五件事
 
-1. **读取** —— `focused-reading` skill 保证只读相关内容，不发散。
-2. **讨论** —— `focused-discussion` skill 保证单线收敛，不一问就甩 ABCD。
-3. **归档** —— `archive-session` skill 把事实和下一步写进 `docs/archives/`。
+1. **读取** —— `cgz-focused-reading` skill 保证只读相关内容，不发散。
+2. **讨论** —— `cgz-focused-discussion` skill 保证单线收敛，不一问就甩 ABCD。
+3. **归档** —— `cgz-archive-session` skill 把事实和下一步写进 `docs/archives/`。
 4. **教训** —— `docs/ai-lessons.md` 记录错误 → 纠正 → 规则，下次启动读取。
-5. **复盘** —— `daily-recap` skill 按天聚合当日归档与教训，写到 Obsidian vault 的 `Daily/YYYY-MM-DD.md`。
+5. **复盘** —— `cgz-daily-recap` skill 按天聚合当日归档与教训，写到 Obsidian vault 的 `Daily/YYYY-MM-DD.md`。
 
 ---
 
 ## cgz 配置
 
 - **Obsidian vault**: `{{OBSIDIAN_VAULT}}`
-  - `daily-recap` 写到此目录下的 `Daily/YYYY-MM-DD.md`
+  - `cgz-daily-recap` 写到此目录下的 `Daily/YYYY-MM-DD.md`
   - 留空表示禁用每日复盘
   - cgz-init 会在初始化时询问填入
 

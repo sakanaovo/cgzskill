@@ -11,7 +11,7 @@ labels: enhancement
 
 ## 现有 skill 为什么不够
 
-<!-- focused-discussion / focused-reading / archive-session 都覆盖不了吗? 为什么? -->
+<!-- cgz-focused-discussion / cgz-focused-reading / cgz-archive-session / cgz-init / cgz-daily-recap 都覆盖不了吗? 为什么? -->
 
 ## 期望行为
 

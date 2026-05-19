@@ -1,0 +1,4 @@
+interface:
+  display_name: "cgz Focused Reading"
+  short_description: "阅读文档、代码、合并请求、日志和长上下文时只回答当前问题"
+  default_prompt: "读取材料后只回答用户当前问题，区分事实、推断和不确定点，不扩展成教程或实现计划。"

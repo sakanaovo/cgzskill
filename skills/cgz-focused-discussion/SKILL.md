@@ -1,6 +1,6 @@
 ---
-name: focused-discussion
-description: "Keep project discussions focused and convergent. Use when the user asks to stay focused, when a discussion is drifting, or when Claude/Codex is expanding into side topics, options, estimates, or unsolicited next steps."
+name: cgz-focused-discussion
+description: "让项目讨论保持单线收敛。用户要求聚焦、对话跑偏，或 Claude/Codex 准备主动扩展方案、选项、工时、优先级、旁支议题时使用；禁止一问就甩多方案，必须先闭合当前问题。"
 ---
 
 # 专注讨论
@@ -52,7 +52,7 @@ description: "Keep project discussions focused and convergent. Use when the user
 上下文值得保留时：
 
 ```text
-这轮已经有几个结论和路径值得留住。切到 archive-session 先归档，再继续。
+这轮已经有几个结论和路径值得留住。切到 cgz-archive-session 先归档，再继续。
 ```
 
 只有用户确认或显式要求归档时才写文件。

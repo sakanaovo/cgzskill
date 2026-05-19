@@ -285,7 +285,7 @@ def main() -> None:
         description="Bump plugin versions and sync CHANGELOG (npm-style).",
         epilog=(
             "Examples:\n"
-            "  python scripts/bump.py focused-discussion --minor --note 'Added X'\n"
+            "  python scripts/bump.py cgz-focused-discussion --minor --note 'Added X'\n"
             "  python scripts/bump.py cgz-init --patch --note 'Fix scan order'\n"
             "  python scripts/bump.py --release\n"
             "  python scripts/bump.py --status"

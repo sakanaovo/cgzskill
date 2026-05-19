@@ -1,0 +1,4 @@
+interface:
+  display_name: "cgz Daily Recap"
+  short_description: "按天聚合归档和教训，生成 Obsidian 友好的每日笔记"
+  default_prompt: "读取当天归档和教训后，写入 AGENTS.md 配置的 obsidian_vault/Daily/YYYY-MM-DD.md；使用 YAML frontmatter 和 wikilinks，不编造内容或链接。"

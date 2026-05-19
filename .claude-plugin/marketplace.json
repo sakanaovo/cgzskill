@@ -4,43 +4,43 @@
     "name": "sakanaovo"
   },
   "metadata": {
-    "description": "sakanaovo 的个人 Claude Code skill marketplace —— 把对话纪律、阅读纪律、会话归档、启动检测、每日复盘收成一套硬规则。每个 skill 的判定依据都走五大节骨架(五原则 / 五维度 / 五心理学 / 对话严苛规则 / 语言纯化规则)。",
+    "description": "sakanaovo 的个人 Claude Code 技能市场 —— 把对话纪律、阅读纪律、会话归档、启动检测、每日复盘收成一套硬规则。每个 skill 的判定依据都走五大节骨架(五原则 / 五维度 / 五心理学 / 对话严苛规则 / 语言纯化规则)。",
     "version": "1.2.0"
   },
   "plugins": [
     {
-      "name": "focused-discussion",
+      "name": "cgz-focused-discussion",
       "description": "对话纪律 —— 强制 Claude 单线收敛。禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级、禁止开新分支不闭合。专治「一对话就跑偏」。",
       "source": "./",
       "strict": false,
       "version": "1.1.0",
       "category": "dialogue-discipline",
       "keywords": ["focus", "discussion", "discipline", "dialogue", "anti-divergence", "chinese"],
-      "skills": ["./skills/focused-discussion"]
+      "skills": ["./skills/cgz-focused-discussion"]
     },
     {
-      "name": "archive-session",
-      "description": "会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文压缩进项目 docs。禁止新增分析、禁止补方案、禁止评工时,只保留事实和下一步。",
+      "name": "cgz-archive-session",
+      "description": "会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文压缩进项目文档。禁止新增分析、禁止补方案、禁止评工时,只保留事实和下一步。",
       "source": "./",
       "strict": false,
       "version": "1.1.0",
       "category": "context-management",
       "keywords": ["archive", "handoff", "context", "docs", "session", "memory", "chinese"],
-      "skills": ["./skills/archive-session"]
+      "skills": ["./skills/cgz-archive-session"]
     },
     {
-      "name": "focused-reading",
-      "description": "专注阅读 —— 读取文档、源码、PR、日志、网页、图文或长上下文时只回答当前问题。禁止扩题、禁止把阅读题答成实现题、禁止主动给方案。",
+      "name": "cgz-focused-reading",
+      "description": "专注阅读 —— 读取文档、源码、合并请求、日志、网页、图文或长上下文时只回答当前问题。禁止扩题、禁止把阅读题答成实现题、禁止主动给方案。",
       "source": "./",
       "strict": false,
       "version": "1.1.0",
       "category": "reading-discipline",
       "keywords": ["reading", "docs", "context", "review", "summarize", "scrape", "chinese"],
-      "skills": ["./skills/focused-reading"]
+      "skills": ["./skills/cgz-focused-reading"]
     },
     {
       "name": "cgz-init",
-      "description": "cgz 启动检测 —— 在新项目里扫描 AGENTS.md / docs/ai-lessons.md / docs/archives/ 是否就位，缺失则询问后生成；同时询问并写入 obsidian_vault 配置供 daily-recap 使用。一次性操作。禁止覆盖已存在文件、禁止动业务代码。",
+      "description": "cgz 启动检测 —— 在新项目里扫描 AGENTS.md / docs/ai-lessons.md / docs/archives/ 是否就位，缺失则询问后生成；同时询问并写入 obsidian_vault 配置供 cgz-daily-recap 使用。一次性操作，禁止覆盖已存在文件、禁止动业务代码。",
       "source": "./",
       "strict": false,
       "version": "1.1.0",
@@ -49,14 +49,30 @@
       "skills": ["./skills/cgz-init"]
     },
     {
-      "name": "daily-recap",
-      "description": "每日复盘 —— 按天聚合 docs/archives/、docs/ai-lessons.md 与当前会话上下文，写一份 Obsidian 友好的 Daily/YYYY-MM-DD.md（YAML frontmatter + [[wikilinks]]）。禁止重新分析、禁止编造链接、禁止跨天混写。读取 AGENTS.md 的 obsidian_vault 配置。",
+      "name": "cgz-daily-recap",
+      "description": "每日复盘 —— 按天聚合 docs/archives/、docs/ai-lessons.md 与当前会话上下文，写一份 Obsidian 友好的 Daily/YYYY-MM-DD.md（YAML frontmatter + [[wikilinks]]）。禁止重新分析、禁止编造链接、禁止跨天混写；读取 AGENTS.md 的 obsidian_vault 配置。",
       "source": "./",
       "strict": false,
       "version": "1.0.0",
       "category": "recap",
       "keywords": ["daily", "recap", "obsidian", "review", "summary", "vault", "wikilink", "chinese"],
-      "skills": ["./skills/daily-recap"]
+      "skills": ["./skills/cgz-daily-recap"]
+    },
+    {
+      "name": "cgz-all",
+      "description": "cgz 全套技能 —— 一次安装对话纪律、阅读纪律、会话归档、启动检测和每日复盘。适合想完整启用 cgz 工作流的项目。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "bundle",
+      "keywords": ["cgz", "bundle", "all", "memory", "workflow", "chinese"],
+      "skills": [
+        "./skills/cgz-focused-discussion",
+        "./skills/cgz-archive-session",
+        "./skills/cgz-focused-reading",
+        "./skills/cgz-init",
+        "./skills/cgz-daily-recap"
+      ]
     }
   ]
 }

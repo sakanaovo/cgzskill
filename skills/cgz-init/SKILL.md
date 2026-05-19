@@ -1,6 +1,6 @@
 ---
 name: cgz-init
-description: "Bootstrap the cgz memory architecture in a project. Scan whether AGENTS.md, docs/ai-lessons.md, and docs/archives/ are in place; if any are missing, ask the user and generate the skeleton. Use when the user says init cgz, initialize cgz, set up project memory, bootstrap memory, 启动 cgz, 初始化 cgz, 让 AI 学这套, or starts using cgz in a new project for the first time."
+description: "在项目里初始化 cgz 记忆架构。扫描 AGENTS.md、docs/ai-lessons.md、docs/archives/ 是否就位；缺失时先询问用户再生成骨架。用户说初始化 cgz、启动 cgz、让 AI 学这套、设置项目记忆，或新项目首次使用 cgz 时触发。"
 ---
 
 # cgz 启动检测
@@ -27,12 +27,12 @@ description: "Bootstrap the cgz memory architecture in a project. Scan whether A
 ├── CLAUDE.md                 # (可选) Claude Code 项目的 bridge
 ├── docs/
 │   ├── ai-lessons.md         # 教训日志:错误 → 纠正 → 规则
-│   └── archives/             # archive-session 归档目录
+│   └── archives/             # cgz-archive-session 归档目录
 ```
 
-**AGENTS.md 里必须有 `## cgz 配置` 段**，记录 `obsidian_vault` 路径（`daily-recap` skill 读取）。空值表示禁用每日复盘。
+**AGENTS.md 里必须有 `## cgz 配置` 段**，记录 `obsidian_vault` 路径（`cgz-daily-recap` skill 读取）。空值表示禁用每日复盘。
 
-`focused-discussion` / `focused-reading` / `archive-session` / `daily-recap` 等 skill 由用户通过 `/plugin install` 单独装到 `.claude/skills/`，**不在 cgz-init 的生成范围内**。
+`cgz-focused-discussion` / `cgz-focused-reading` / `cgz-archive-session` / `cgz-daily-recap` 等 skill 由用户通过 `/plugin install` 单独装到 `.claude/skills/`，**不在 cgz-init 的生成范围内**。
 
 ## 触发
 
@@ -71,7 +71,7 @@ description: "Bootstrap the cgz memory architecture in a project. Scan whether A
 2. **询问**。两个单一问句，顺序问：
 
    - 「缺失的 N 项要全部生成，还是挑选？」
-   - 「Obsidian vault 路径填什么？（留空 = 禁用 daily-recap）」
+   - 「Obsidian vault 路径填什么？（留空 = 禁用 cgz-daily-recap）」
 
 3. **生成**。已存在项一律不覆盖：
 
