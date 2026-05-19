@@ -1,9 +1,11 @@
-# claude-skill-forge
+# cgzskill
 
-> 一对 Claude Code 对话纪律 skill 套件。
+> Claude Code 对话纪律 + skill 工厂套件。
 >
 > **focused-discussion** 让 Claude 不再一问就甩 ABCD 方案、不再把一次对话越聊越散。
 > **build-skill** 用采访的方式,5 分钟帮你造一个属于你自己的 skill。
+>
+> *后续会扩展更多 skill,统一放在 `skills/` 目录下。*
 
 ---
 
@@ -24,7 +26,24 @@
 
 ---
 
-## 包含的两个 skill
+## 仓库结构
+
+```
+cgzskill/
+├── README.md
+├── LICENSE
+└── skills/
+    ├── focused-discussion/
+    │   └── SKILL.md
+    └── build-skill/
+        └── SKILL.md
+```
+
+每个 skill 是 `skills/` 下的独立子文件夹,**复制对应文件夹就能用**,互不依赖(`build-skill` 在设计上引用了 `focused-discussion`,建议一起装)。
+
+---
+
+## 当前包含的 skill
 
 ### 1. `focused-discussion` —— Claude 对话纪律
 
@@ -60,12 +79,15 @@
 把对应文件夹复制进你项目的 `.claude/skills/`:
 
 ```bash
-git clone https://github.com/sakanaovo/claude-skill-forge.git
-cd claude-skill-forge
+git clone https://github.com/sakanaovo/cgzskill.git
+cd cgzskill
 
-# 复制到你的项目
-cp -r focused-discussion /path/to/your-project/.claude/skills/
-cp -r build-skill /path/to/your-project/.claude/skills/
+# 一次性安装全部 skill
+cp -r skills/* /path/to/your-project/.claude/skills/
+
+# 或者只挑你要的
+cp -r skills/focused-discussion /path/to/your-project/.claude/skills/
+cp -r skills/build-skill /path/to/your-project/.claude/skills/
 ```
 
 **两个 skill 强烈建议一起装** —— `build-skill` 内部引用 `focused-discussion`,单独装会留断引用。
