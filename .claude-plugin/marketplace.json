@@ -1,0 +1,22 @@
+{
+  "name": "cgzskill",
+  "owner": {
+    "name": "sakanaovo"
+  },
+  "metadata": {
+    "description": "sakanaovo 的个人 Claude Code skill marketplace —— 对话纪律 + 工作流 skill 集合,统一在 cgzskill 这个 namespace 下分发。",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "focused-discussion",
+      "description": "对话纪律 —— 强制 Claude 单线收敛,禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级。专治「一对话就跑偏」。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "dialogue-discipline",
+      "keywords": ["focus", "discussion", "discipline", "dialogue", "anti-divergence", "chinese"],
+      "skills": ["./skills/focused-discussion"]
+    }
+  ]
+}
