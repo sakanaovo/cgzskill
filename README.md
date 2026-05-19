@@ -1,28 +1,30 @@
 # cgzskill
 
-> Claude Code 对话纪律 + skill 工厂套件。
+> `sakanaovo` 的个人 Claude 兼容 skill 命名空间。
 >
-> **focused-discussion** 让 Claude 不再一问就甩 ABCD 方案、不再把一次对话越聊越散。
-> **build-skill** 用采访的方式,5 分钟帮你造一个属于你自己的 skill。
->
-> *后续会扩展更多 skill,统一放在 `skills/` 目录下。*
+> 所有 skill 统一用 `cgz-` 前缀,方便在团队 / 多仓库混用 skill 时一眼识别来源。
 
 ---
 
-## 为什么有这个仓库
+## 这是什么
 
-如果你用过 Claude Code 超过一周,大概率遇到过这两件事:
+一个开源的 [Agent Skills 规范](https://agentskills.io/specification) 兼容 skill 集合。
 
-1. **你问一句,Claude 答出来 4 个方案 + 利弊表格 + 工时估**。挑完一个,下一句它又开始新的 ABCD。一次对话被切碎成 10 个子话题,**最后什么都没拍板**。
+**为什么有这个仓库:**
 
-2. **你想把"我每次都这么干"的工作流写成 skill**,提高效率。但落笔时永远卡在"这个 skill 该在什么时候触发""反模式怎么写才不空洞""description 该写多详细"……纠结到放弃。
+- 整理我自己反复用的 skill,共享出来给同样的工作流场景用
+- 用统一 `cgz-` 前缀,避免和官方 / 其他人的 skill 重名(比如自带的 `focused-discussion` 不止一个版本在流传,加前缀更清楚)
+- 不重复造轮子:**新 skill 用 [Anthropic 官方 skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 生成**(它带 eval / 迭代 / 描述调优,比我自己写的强),完事后改 `name` 字段加 `cgz-` 前缀就行
 
-这两件事不是你的问题,是**没有人告诉过 Claude 该怎么聊天、也没有人告诉你该怎么写 skill**。
+---
 
-这个仓库解决这两件事:
+## 当前包含的 skill
 
-- `focused-discussion` —— 一份给 Claude 的对话纪律。
-- `build-skill` —— 一个会**采访你**的 skill,问完 6 个问题,自动生成另一个 skill。
+| Skill | 用途 | 自动触发 | 显式触发 |
+|-------|------|---------|---------|
+| **`cgz-focused-discussion`** | 对话纪律 —— 强制 Claude 单线收敛,禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级。专治"一对话就跑偏"。 | 用户讨论 PR / 产品 / 架构 / UX 问题时;或说「跑偏了」「聚焦」「先停一下」「先看反馈」 | `/cgz-focused-discussion` |
+
+> 后续 skill 会加进 `skills/` 下,统一 `cgz-` 前缀。
 
 ---
 
@@ -32,114 +34,100 @@
 cgzskill/
 ├── README.md
 ├── LICENSE
+├── .gitignore
+├── .github/
+│   ├── workflows/validate-skills.yml   # CI:推送时校验 spec 合规
+│   └── scripts/validate_skills.py
 └── skills/
-    ├── focused-discussion/
-    │   └── SKILL.md
-    └── build-skill/
+    └── cgz-focused-discussion/
         └── SKILL.md
 ```
-
-每个 skill 是 `skills/` 下的独立子文件夹,**复制对应文件夹就能用**,互不依赖(`build-skill` 在设计上引用了 `focused-discussion`,建议一起装)。
-
----
-
-## 当前包含的 skill
-
-### 1. `focused-discussion` —— Claude 对话纪律
-
-**做什么**:强制 Claude 在每次回答时遵守"先闭合上一个问题,再开下一个"。禁止一问就甩 ABCD、禁止推理过程外放、禁止用户没问就主动塞工时/优先级/推荐。
-
-**什么时候触发**:
-- 用户在 PR / 产品 / 架构 / UX 上提了具体问题
-- 用户说「跑偏了」「聚焦」「先停一下」「先看反馈」
-- 显式触发:`/focused-discussion`
-
-**适合谁**:
-- 跟 Claude 做产品讨论 / 架构辩论 / 方案对齐,被甩 ABCD 烦过的人
-- 自己也容易跟着 Claude 一起发散,聊到最后什么都没决定的人
-
-### 2. `build-skill` —— 采访式 skill 生成器
-
-**做什么**:用 6 个问题采访你 —— 触发场景 / 真实失败案例 / 反模式 / 正确做法 / 输出格式 / 命名 —— 然后生成一份可以直接放进 `.claude/skills/` 的 SKILL.md。
-
-**关键设计**:严格遵守 `focused-discussion` 的对话纪律,**一次只问一个问题,前一个没答清楚不开下一个**。
-
-**什么时候触发**:
-- 你有一套反复用的工作流想做成 skill,但不知道怎么写
-- 显式触发:`/build-skill [一句话描述你想做的 skill]`
-
-**适合谁**:
-- 想把自己的方法论沉淀成可复用工具的人
-- 已经手写过几个 skill 但效果一般,不知道为什么的人
 
 ---
 
 ## 安装
 
-把对应文件夹复制进你项目的 `.claude/skills/`:
+### Claude Code
+
+Claude Code 启动时会自动扫描 `.claude/skills/`(项目级)和 `~/.claude/skills/`(用户级)目录,**复制 skill 文件夹进去就能用,不需要重启**。
 
 ```bash
+# Clone 本仓库
 git clone https://github.com/sakanaovo/cgzskill.git
 cd cgzskill
 
-# 一次性安装全部 skill
-cp -r skills/* /path/to/your-project/.claude/skills/
+# 选项 A:装到「单个项目」(只在该项目下可用)
+cp -r skills/cgz-focused-discussion /path/to/your-project/.claude/skills/
 
-# 或者只挑你要的
-cp -r skills/focused-discussion /path/to/your-project/.claude/skills/
-cp -r skills/build-skill /path/to/your-project/.claude/skills/
+# 选项 B:装到「全局用户级」(所有项目都能用)
+mkdir -p ~/.claude/skills
+cp -r skills/cgz-focused-discussion ~/.claude/skills/
 ```
 
-**两个 skill 强烈建议一起装** —— `build-skill` 内部引用 `focused-discussion`,单独装会留断引用。
+验证安装成功:在 Claude Code 里输入 `/cgz-focused-discussion`,如果有响应就装好了。
+
+### Codex / 其他 AI 编程 agent
+
+Codex(OpenAI)目前没有 Claude Code 那套 `.claude/skills/` 自动加载机制。Codex 读 **`AGENTS.md`** 当项目说明。让 Codex 也用上本 skill,有两种做法:
+
+**做法 A:把 SKILL.md 内容贴进 AGENTS.md**(最简单,推荐)
+
+```bash
+# 在你的项目根目录
+cat skills/cgz-focused-discussion/SKILL.md >> AGENTS.md
+```
+
+(把 cgzskill 仓库的 SKILL.md 内容追加到你项目的 AGENTS.md。Codex 读 AGENTS.md 时就会拿到这套对话纪律。)
+
+**做法 B:在 AGENTS.md 里引用,让 Codex 读时去拉**
+
+```markdown
+# AGENTS.md
+
+## 对话纪律
+请遵守 https://github.com/sakanaovo/cgzskill/blob/main/skills/cgz-focused-discussion/SKILL.md 里的对话纪律。
+```
+
+(更轻,但依赖 agent 能联网取内容。)
+
+> ⚠️ **诚实提醒**:Agent Skills spec 本身是统一的,但**自动加载机制是 Claude Code 独有**。Codex / Cursor / 其他 agent 用本仓库的 skill,目前都是手动"贴进 AGENTS.md"的方式。
 
 ---
 
-## 怎么用
+## 自己创建新 skill 的推荐流程
 
-### 让 Claude 自动遵守对话纪律
+**不用我重新造轮子。用 Anthropic 官方的 `skill-creator`,完事改个前缀就行:**
 
-`focused-discussion` 装好后**不需要每次显式调用**。当你跟 Claude 讨论 PR / 产品 / 架构 / UX 问题,或者说"跑偏了 / 聚焦 / 先停一下"时,Claude 会自动激活。
+```bash
+# 1. clone 官方 skills 仓库(里面有 skill-creator)
+git clone https://github.com/anthropics/skills.git
 
-也可以手动唤起:
+# 2. 把 skill-creator 装到你的项目
+cp -r skills/skills/skill-creator /path/to/your-project/.claude/skills/
 
-```
-/focused-discussion
-```
-
-### 5 分钟造一个自己的 skill
-
-```
-/build-skill 帮我做代码评审的固定问法
+# 3. 在 Claude Code 里跑
+/skill-creator 帮我做一个 XX 的 skill
 ```
 
-Claude 会进入采访模式,一个问题一个问题问你:
+走完 skill-creator 的采访 + eval 流程之后,把生成的 skill:
 
-1. 这个 skill 你希望什么时候触发?
-2. 上一次你没用这个 skill 时,具体出了什么问题?
-3. Claude 通常会做错什么?
-4. 你希望 Claude 具体怎么做?
-5. 输出长什么样?
-6. 叫什么名字?
-
-答完之后会先**回放确认**,你说对了才会写文件。
+1. 改 `name` 字段:`my-skill` → `cgz-my-skill`
+2. 同步改父目录名 `my-skill/` → `cgz-my-skill/`(spec 硬性要求 name = 父目录名)
+3. 提 PR 到本仓库 `skills/` 下
 
 ---
 
-## 来自一次真实的失败
+## CI
 
-`focused-discussion` 不是凭空设计的。它来自一次真实的对话:
+每次 push / PR 自动跑 `.github/scripts/validate_skills.py`,校验:
 
-> 用户问了一个**具体的 UX 问题**,我做完 MVP 之后,**一次对话被我切碎成 10 个子话题** —— 登录方式、账户隔离、容器架构、扩展选型、二维码时效、备注规则、接口超时、监控告警 …… 每个子话题我都甩 A/B/C/D 方案 + 利弊表格 + 工时估。
->
-> 用户花精力挑选 / 挑战,挑完又冒出新分支。**最后用户说**:
->
-> > 「我觉得这样不好 一直推理 要跑偏 给出方案 又要花时间想 慢慢的就聊跑题了」
+- SKILL.md 存在
+- YAML frontmatter 合法
+- `name` 字段 = 父目录名,kebab-case,≤ 64 字符
+- `description` ≤ 1024 字符
+- SKILL.md 正文 ≤ 500 行(超出建议拆 `references/`)
 
-根本问题不是回答错了,是**每个回答都被做成了"新决策点"**,而不是"闭合上一个问题"。
-
-`focused-discussion` 把这件事写成了硬规则。
-
-而 `build-skill` 解决另一件事 —— **大多数人不是写不出 skill,是不知道一个"好用"的 skill 长什么样**。这个 skill 不教你 markdown 语法,它**采访你**。问完 6 件事,SKILL.md 自动出来,直接能用。
+红 → 合并被拦。
 
 ---
 
@@ -149,6 +137,6 @@ MIT
 
 ---
 
-## 贡献
+## Contributing
 
-欢迎 issue / PR。如果你用 `build-skill` 造出了自己觉得不错的 skill,也欢迎来分享。
+欢迎 issue / PR。如果你用 `skill-creator` 造出了好 skill,改个 `cgz-` 前缀提过来 —— 通过 CI 校验就能合。
