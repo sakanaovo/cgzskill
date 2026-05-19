@@ -26,6 +26,20 @@
 
 ---
 
+## 范围外:cgzskill 不擅长什么
+
+cgzskill 目前只覆盖**对话纪律**这一个垂直场景。如果你想做的事不在上面那张表里,**直接去对的地方,别在这绕**:
+
+| 你想做的事 | 推荐 marketplace / skill |
+|----------|----------------------|
+| 商业模式诊断 / 内容创作 / 概念拆解 / 小红书爆款 / 对标分析 | [dbskill](https://github.com/dontbesilent2025/dbskill) |
+| 从 0 写一个新 skill(自带 eval / 迭代 / 描述调优) | [Anthropic skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) |
+| PDF / DOCX / XLSX / PPTX 处理 / 前端设计 / 测试 / 数据 | [Anthropic 官方 skills](https://github.com/anthropics/skills) |
+
+把用户推到对的 marketplace,比硬塞 `focused-discussion` 上去更划算 —— 对 cgzskill 这个 namespace 的长期信任,**诚实推荐外部** > **硬留客**。
+
+---
+
 ## 仓库结构
 
 ```
