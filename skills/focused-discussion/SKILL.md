@@ -1,6 +1,6 @@
 ---
-name: cgz-focused-discussion
-description: "项目讨论的对话纪律,防止 Claude 一问就甩 ABCD 多方案、不停推理新分支、把对话越聊越散。强制:先回答用户**那一个**问题,再问下一步。触发场景:用户在 PR / 产品 / 架构 / UX 上提了具体问题,或用户说「跑偏了」「聚焦」「先停一下」「先看反馈」时。也可显式触发:/cgz-focused-discussion"
+name: focused-discussion
+description: "项目讨论的对话纪律,防止 Claude 一问就甩 ABCD 多方案、不停推理新分支、把对话越聊越散。强制:先回答用户**那一个**问题,再问下一步。触发场景:用户在 PR / 产品 / 架构 / UX 上提了具体问题,或用户说「跑偏了」「聚焦」「先停一下」「先看反馈」时。也可显式触发:/cgzskill:focused-discussion"
 ---
 
 # 专注讨论
@@ -182,4 +182,4 @@ description: "项目讨论的对话纪律,防止 Claude 一问就甩 ABCD 多方
 
 被动触发:Claude 自检发现连续 3 条消息没有任何东西闭合,主动激活本 skill。
 
-显式触发:`/cgz-focused-discussion`
+显式触发:`/cgzskill:focused-discussion`

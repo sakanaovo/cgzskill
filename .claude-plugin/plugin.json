@@ -1,0 +1,11 @@
+{
+  "name": "cgzskill",
+  "description": "对话纪律 + 个人 Claude skill 命名空间。用 sakanaovo 自己反复打磨的 skill,统一在 cgzskill 这个 namespace 下分发。",
+  "version": "1.0.0",
+  "author": {
+    "name": "sakanaovo"
+  },
+  "homepage": "https://github.com/sakanaovo/cgzskill",
+  "repository": "https://github.com/sakanaovo/cgzskill",
+  "license": "MIT"
+}

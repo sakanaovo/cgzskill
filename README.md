@@ -1,20 +1,20 @@
 # cgzskill
 
-> `sakanaovo` 的个人 Claude 兼容 skill 命名空间。
+> `sakanaovo` 的个人 Claude Code 插件 + skill 命名空间。
 >
-> 所有 skill 统一用 `cgz-` 前缀,方便在团队 / 多仓库混用 skill 时一眼识别来源。
+> 一行命令安装,自动 namespace 隔离,不和别人的 skill 撞名。
 
 ---
 
 ## 这是什么
 
-一个开源的 [Agent Skills 规范](https://agentskills.io/specification) 兼容 skill 集合。
+一个符合 [Agent Skills 规范](https://agentskills.io/specification) 的 Claude Code **plugin**(同时也是 skill 集合),包含我自己反复打磨的工作流 skill。
 
 **为什么有这个仓库:**
 
-- 整理我自己反复用的 skill,共享出来给同样的工作流场景用
-- 用统一 `cgz-` 前缀,避免和官方 / 其他人的 skill 重名(比如自带的 `focused-discussion` 不止一个版本在流传,加前缀更清楚)
-- 不重复造轮子:**新 skill 用 [Anthropic 官方 skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 生成**(它带 eval / 迭代 / 描述调优,比我自己写的强),完事后改 `name` 字段加 `cgz-` 前缀就行
+- 整理我反复用的 skill,共享出来给同样工作流场景的人用
+- 用 plugin 形式分发,**用户一行命令装,不用 `git clone` + `cp -r`**
+- 不重复造轮子:**新 skill 用 [Anthropic 官方 skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) 生成**(自带 eval / 迭代 / 描述调优),完事归到 `cgzskill` namespace 即可
 
 ---
 
@@ -22,9 +22,9 @@
 
 | Skill | 用途 | 自动触发 | 显式触发 |
 |-------|------|---------|---------|
-| **`cgz-focused-discussion`** | 对话纪律 —— 强制 Claude 单线收敛,禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级。专治"一对话就跑偏"。 | 用户讨论 PR / 产品 / 架构 / UX 问题时;或说「跑偏了」「聚焦」「先停一下」「先看反馈」 | `/cgz-focused-discussion` |
+| **`focused-discussion`** | 对话纪律 —— 强制 Claude 单线收敛,禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级。专治"一对话就跑偏"。 | 用户讨论 PR / 产品 / 架构 / UX 时;或说「跑偏了」「聚焦」「先停一下」「先看反馈」 | `/cgzskill:focused-discussion` |
 
-> 后续 skill 会加进 `skills/` 下,统一 `cgz-` 前缀。
+> 注:Claude Code plugin 加载后,所有 skill 自动加 `cgzskill:` 前缀(plugin namespace)。
 
 ---
 
@@ -32,14 +32,16 @@
 
 ```
 cgzskill/
+├── .claude-plugin/
+│   └── plugin.json              # Plugin manifest
 ├── README.md
 ├── LICENSE
 ├── .gitignore
 ├── .github/
-│   ├── workflows/validate-skills.yml   # CI:推送时校验 spec 合规
+│   ├── workflows/validate-skills.yml
 │   └── scripts/validate_skills.py
 └── skills/
-    └── cgz-focused-discussion/
+    └── focused-discussion/
         └── SKILL.md
 ```
 
@@ -47,73 +49,49 @@ cgzskill/
 
 ## 安装
 
-### Claude Code
+### Claude Code:三种姿势
 
-Claude Code 启动时会自动扫描 `.claude/skills/`(项目级)和 `~/.claude/skills/`(用户级)目录,**复制 skill 文件夹进去就能用,不需要重启**。
+| 场景 | 命令 | 调用方式 |
+|------|------|---------|
+| **本地 plugin 调试**(你 clone 到本地用) | `git clone https://github.com/sakanaovo/cgzskill.git && claude --plugin-dir ./cgzskill` | `/cgzskill:focused-discussion` |
+| **远程 zip plugin**(打成 zip 挂到任意 URL) | `claude --plugin-url https://example.com/cgzskill.zip` | `/cgzskill:focused-discussion` |
+| **走 marketplace**(提交到官方后) | `/plugin install cgzskill` | `/cgzskill:focused-discussion` |
+| **退化到 standalone skill**(不用 plugin) | `cp -r skills/focused-discussion ~/.claude/skills/`(或项目 `.claude/skills/`) | `/focused-discussion`(无 namespace) |
 
-```bash
-# Clone 本仓库
-git clone https://github.com/sakanaovo/cgzskill.git
-cd cgzskill
+> 提交到官方 marketplace:https://claude.ai/settings/plugins/submit
 
-# 选项 A:装到「单个项目」(只在该项目下可用)
-cp -r skills/cgz-focused-discussion /path/to/your-project/.claude/skills/
+### Codex(OpenAI)/ Cursor / 其他 agent
 
-# 选项 B:装到「全局用户级」(所有项目都能用)
-mkdir -p ~/.claude/skills
-cp -r skills/cgz-focused-discussion ~/.claude/skills/
-```
+**这些 agent 没有 Claude Code 的 plugin 机制 ——** 它们读 `AGENTS.md` 当项目说明。让它们用上本仓库的对话纪律,有两种做法:
 
-验证安装成功:在 Claude Code 里输入 `/cgz-focused-discussion`,如果有响应就装好了。
+| 做法 | 命令 | 说明 |
+|------|------|------|
+| **A. 内容追加**(最稳,推荐) | `cat skills/focused-discussion/SKILL.md >> /path/to/your-project/AGENTS.md` | 把 SKILL.md 内容贴到你项目的 AGENTS.md。Codex 读 AGENTS.md 时会拿到这套纪律 |
+| **B. 链接引用**(更轻,依赖联网) | 在 AGENTS.md 写一行:`请遵守 https://github.com/sakanaovo/cgzskill/blob/main/skills/focused-discussion/SKILL.md 里的对话纪律` | Codex 需要能联网拉远程文件;不是所有 agent / 网络环境都支持 |
 
-### Codex / 其他 AI 编程 agent
-
-Codex(OpenAI)目前没有 Claude Code 那套 `.claude/skills/` 自动加载机制。Codex 读 **`AGENTS.md`** 当项目说明。让 Codex 也用上本 skill,有两种做法:
-
-**做法 A:把 SKILL.md 内容贴进 AGENTS.md**(最简单,推荐)
-
-```bash
-# 在你的项目根目录
-cat skills/cgz-focused-discussion/SKILL.md >> AGENTS.md
-```
-
-(把 cgzskill 仓库的 SKILL.md 内容追加到你项目的 AGENTS.md。Codex 读 AGENTS.md 时就会拿到这套对话纪律。)
-
-**做法 B:在 AGENTS.md 里引用,让 Codex 读时去拉**
-
-```markdown
-# AGENTS.md
-
-## 对话纪律
-请遵守 https://github.com/sakanaovo/cgzskill/blob/main/skills/cgz-focused-discussion/SKILL.md 里的对话纪律。
-```
-
-(更轻,但依赖 agent 能联网取内容。)
-
-> ⚠️ **诚实提醒**:Agent Skills spec 本身是统一的,但**自动加载机制是 Claude Code 独有**。Codex / Cursor / 其他 agent 用本仓库的 skill,目前都是手动"贴进 AGENTS.md"的方式。
+> ⚠️ **诚实提醒**:Agent Skills 规范本身是统一的,但**自动加载 + namespace 机制是 Claude Code 独有**。Codex / Cursor 等 agent 目前都是手动嵌进 AGENTS.md 的方式。
 
 ---
 
-## 自己创建新 skill 的推荐流程
+## 自己造新 skill 加进来的推荐流程
 
-**不用我重新造轮子。用 Anthropic 官方的 `skill-creator`,完事改个前缀就行:**
+不重新造轮子。用官方 `skill-creator` 生成,然后归入 `cgzskill` namespace:
 
 ```bash
-# 1. clone 官方 skills 仓库(里面有 skill-creator)
+# 1. 装 Anthropic 官方 skill-creator(它带 eval + 迭代 + 描述调优)
 git clone https://github.com/anthropics/skills.git
+cp -r skills/skills/skill-creator ~/.claude/skills/
 
-# 2. 把 skill-creator 装到你的项目
-cp -r skills/skills/skill-creator /path/to/your-project/.claude/skills/
-
-# 3. 在 Claude Code 里跑
+# 2. 在 Claude Code 里用
 /skill-creator 帮我做一个 XX 的 skill
 ```
 
-走完 skill-creator 的采访 + eval 流程之后,把生成的 skill:
+走完 `skill-creator` 的采访 + eval 流程之后,把生成的 skill:
 
-1. 改 `name` 字段:`my-skill` → `cgz-my-skill`
-2. 同步改父目录名 `my-skill/` → `cgz-my-skill/`(spec 硬性要求 name = 父目录名)
+1. 父目录改成不带前缀的名字(plugin namespace 会自动加前缀,前缀重复就丑了)
+2. `name` 字段同步父目录名(spec 硬性要求)
 3. 提 PR 到本仓库 `skills/` 下
+4. CI 自动跑校验,绿了能合
 
 ---
 
@@ -127,8 +105,6 @@ cp -r skills/skills/skill-creator /path/to/your-project/.claude/skills/
 - `description` ≤ 1024 字符
 - SKILL.md 正文 ≤ 500 行(超出建议拆 `references/`)
 
-红 → 合并被拦。
-
 ---
 
 ## License
@@ -139,4 +115,4 @@ MIT
 
 ## Contributing
 
-欢迎 issue / PR。如果你用 `skill-creator` 造出了好 skill,改个 `cgz-` 前缀提过来 —— 通过 CI 校验就能合。
+欢迎 issue / PR。`skill-creator` 造出来的 skill,改父目录名 + name 字段后,过 CI 校验就能合。
