@@ -1,10 +1,10 @@
-# cgzskill
+# cgzskill: Project memory for AI assistants and coding tools
 
 [简体中文 (primary documentation)](README.md) | English
 
-**Agent Skills for focused reading, focused discussion, and file-based project memory in Claude Code and Codex.**
+**Focused reading, focused discussion, and file-based project memory for AI assistants and coding tools that support Agent Skills.**
 
-cgzskill packages five reusable AI coding workflows: initialize project memory, keep a conversation on topic, read only what answers the question, archive a session for handoff, and produce a daily recap. The Claude Code marketplace lets you install the full `cgz-all` bundle or individual skills.
+cgzskill packages five reusable AI workflows: initialize project memory, keep a conversation on topic, read only what answers the question, archive a session for handoff, and produce a daily recap. Claude Code and Codex are installation examples, not the only intended hosts. The Claude Code marketplace offers the full `cgz-all` bundle or individual skills; other hosts require adaptation to their own skill specifications and have not all been tested.
 
 Version **2.0.0** introduces consistent `cgz-*` names and independent project records for team workflows. Skills follow the [Agent Skills specification](https://agentskills.io/specification); their instructions and reference documents are primarily in Chinese.
 
@@ -13,7 +13,7 @@ Version **2.0.0** introduces consistent `cgz-*` names and independent project re
 Copy this prompt into an agent with access to your development environment:
 
 ```text
-Install cgzskill from the current main branch of https://github.com/sakanaovo/cgzskill. Read its README, detect whether I use Claude Code or Codex, and confirm project-level or user-level scope with me. Use the supported installation method and preserve complete skill directories, including references and assets; do not overwrite existing files or install duplicate skills. Invoke cgz-init through the host's actual skill entry, confirm my author alias if needed, and preserve existing project files and identity. Verify separately that the host loaded the skills and that initialization succeeded. If you lack local access, give me the steps instead of claiming completion. Do not bypass safety controls, run unreviewed code, or request credentials.
+Install cgzskill from the current main branch of https://github.com/sakanaovo/cgzskill. Read its README, identify my AI assistant or coding tool, check whether it supports Agent Skills, and confirm the supported installation scope, such as project-level or user-level, with me. Use the documented examples for Claude Code or Codex; for other hosts, follow their official specifications without guessing paths or commands. Use the supported installation method and preserve complete skill directories, including references and assets; do not overwrite existing files or install duplicate skills. Invoke cgz-init through the host's actual skill entry, confirm my author alias if needed, and preserve existing project files and identity. Verify separately that the host loaded the skills and that initialization succeeded. If you lack local access, give me the steps instead of claiming completion. Do not bypass safety controls, run unreviewed code, or request credentials.
 ```
 
 ## What it helps with
@@ -41,7 +41,7 @@ Reading and discussion work without initialization. Archive and recap also inclu
 
 ## Install
 
-### Claude Code marketplace
+### Example: Claude Code marketplace
 
 Run these commands inside Claude Code, then follow the installation prompts:
 
@@ -60,7 +60,7 @@ Plugin commands use `/<plugin>:<skill>`. The individual reading plugin therefore
 
 Choose the bundle or the individual plugins you need; installing both creates redundant copies of the same skills.
 
-### Codex and standalone skills
+### Example: Codex and standalone skills
 
 Clone this repository, then copy **complete skill directories**, including `SKILL.md`, `references/`, `agents/`, and any `assets/`:
 
@@ -75,7 +75,7 @@ This is a fresh-install example. `-n` preserves existing files; it does not upgr
 
 Codex supports user-level `~/.agents/skills/` and project-level `.agents/skills/`. Use `/skills` to find a skill or mention it explicitly, for example `$cgz-init`. See the official [Codex skills guide](https://developers.openai.com/codex/skills/).
 
-For standalone Claude Code skills, use `~/.claude/skills/` or the project's `.claude/skills/` instead. Other Agent Skills hosts may need their own loading configuration. Do not paste only `SKILL.md` into `AGENTS.md`: that omits the referenced rules and templates. Host-specific behavior still needs validation in the environment you use.
+For standalone Claude Code skills, use `~/.claude/skills/` or the project's `.claude/skills/` instead. Other Agent Skills hosts may need their own loading configuration. Do not paste only `SKILL.md` into `AGENTS.md`: that omits the referenced rules and templates. Follow each host's official directory and invocation rules. Supporting the skill format does not by itself establish compatibility; host-specific behavior still needs validation in the environment you use.
 
 ## First project: initialize, work, archive, recap
 

@@ -1,10 +1,10 @@
-# cgzskill：Claude Code 与 Codex 的项目记忆技能
+# cgzskill：面向 AI 助手与编程工具的项目记忆技能
 
 [English](README.en.md) · [更新记录](CHANGELOG.md) · [贡献指南](CONTRIBUTING.md) · [团队验收清单](docs/team-acceptance.md)
 
 **让 AI 阅读和讨论更聚焦，让会话归档、团队交接和每日复盘有据可查。**
 
-cgzskill 是一套以中文工作流为主的 [Agent Skills](https://agentskills.io/specification)，通过 Claude Code plugin marketplace 分发，也可将完整 skill 目录用于 Codex。包含 5 个独立技能和一个全套安装包 `cgz-all`。
+cgzskill 是一套以中文工作流为主、面向支持 [Agent Skills](https://agentskills.io/specification) 的 AI 助手与编程工具的项目记忆技能。包含 5 个独立技能；Claude Code marketplace 另提供全套安装包 `cgz-all`。下方以 Claude Code 和 Codex 演示安装，不限定适用宿主；其他工具须按其技能规范适配，未逐一实测。
 
 **版本：2.0.0。** 项目记忆保存在可审查的 Markdown 文件中。团队成员各自写独立记录，再按来源汇总，减少多人争写同一个日志或索引的机会。它不是模型自动学习、账号系统或自动 Git 合并服务。
 
@@ -25,12 +25,12 @@ cgzskill 是一套以中文工作流为主的 [Agent Skills](https://agentskills
 把下面这段发给有本地项目访问能力的 AI 编程助手。安装来源是仓库当前 `main`，不要假设存在 `v2.0.0` tag：
 
 ```text
-请帮我安装 https://github.com/sakanaovo/cgzskill 当前 main 的技能。先读 README，识别我用的是 Claude Code 还是 Codex，并确认装到当前项目还是用户级；按宿主说明安装完整目录（含 references 和 assets），已有同名技能先核对，不覆盖或重复安装。安装后用宿主实际显示的入口引导 cgz-init，保留原项目文件和已有身份。分别核验“宿主已加载技能”和“初始化已完成”，不要把复制成功当作加载成功；没有本地访问权限就给我操作步骤。不要关闭安全限制、运行未经审查的代码或提交凭据。
+请帮我安装 https://github.com/sakanaovo/cgzskill 当前 main 的技能。先读 README，识别我正在使用的 AI 助手或编程工具，核对其是否支持 Agent Skills，并确认项目级或用户级等宿主支持的安装范围；Claude Code 和 Codex 可参考文中示例，其他宿主按其官方规范处理，不猜路径或命令。按宿主说明安装完整目录（含 references 和 assets），已有同名技能先核对，不覆盖或重复安装。安装后用宿主实际显示的入口引导 cgz-init，保留原项目文件和已有身份。分别核验“宿主已加载技能”和“初始化已完成”，不要把复制成功当作加载成功；没有本地访问权限就给我操作步骤。不要关闭安全限制、运行未经审查的代码或提交凭据。
 ```
 
 也可按下面的命令自行安装。
 
-## 快速开始：Claude Code
+## 安装示例一：Claude Code
 
 在 **Claude Code 会话里**输入，不是在系统 shell 中执行：
 
@@ -65,7 +65,7 @@ cgzskill 是一套以中文工作流为主的 [Agent Skills](https://agentskills
 
 Claude Code 插件命令使用 `/插件名:技能名`，详见[官方插件说明](https://code.claude.com/docs/en/plugins)。不要同时安装全套包和重复的单项包，避免出现重复技能入口。实际可用命令以宿主的技能列表为准。
 
-## Codex 与其他安装方式
+## 安装示例二：Codex 与其他方式
 
 ### Codex：复制完整目录
 
@@ -89,7 +89,7 @@ claude --plugin-dir ./cgzskill
 
 不走 marketplace 时，将所需完整 skill 目录复制到 `~/.claude/skills/` 或目标项目 `.claude/skills/`。这种安装方式的命令没有插件命名空间；以宿主显示的名称为准。
 
-其他宿主需要**保留完整 skill 目录**，包括 `SKILL.md`、`references/` 和已有 `assets/`，再按其说明适配入口。只拼接 `SKILL.md` 到项目说明会丢失引用。此仓库未验证所有 Cursor 或其他 agent 的加载方式。
+其他宿主需要**保留完整 skill 目录**，包括 `SKILL.md`、`references/` 和已有 `assets/`，再按其说明适配入口。只拼接 `SKILL.md` 到项目说明会丢失引用。其他宿主的目录、调用入口和能力以其官方说明为准；本仓库未逐一验证，不能由遵循技能规范推定已兼容。
 
 ## 初始化后，项目里有什么
 

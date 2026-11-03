@@ -4,7 +4,7 @@
     "name": "sakanaovo"
   },
   "metadata": {
-    "description": "面向 Claude Code 与 Codex 的项目记忆和团队协作 Agent Skills：专注阅读与讨论、一次初始化、独立会话归档、来源可追溯的每日复盘。",
+    "description": "面向支持 Agent Skills 的 AI 助手与编程工具的项目记忆和团队协作技能：专注阅读与讨论、一次初始化、独立会话归档、来源可追溯的每日复盘。",
     "version": "2.0.0"
   },
   "plugins": [
