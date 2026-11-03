@@ -2,11 +2,13 @@
 
 English · [简体中文](README.zh-CN.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Team acceptance checklist](docs/team-acceptance.md)
 
+> **Important update: 2.0 → 2.1** changes how document language is selected and saved, and makes English the repository homepage. Existing users should update the complete skills and run init to check missing language settings. **Your identity, historical records, and team language remain intact.** Read the [upgrade impact and checklist](#upgrading-from-20-to-21) before upgrading; the published v2.0.0 release does not include these changes.
+
 **Focused reading, focused discussion, and file-based project memory for AI assistants and coding tools that support Agent Skills.**
 
 cgzskill packages five reusable AI workflows: initialize project memory, keep a conversation on topic, read only what answers the question, archive a session for handoff, and produce a daily recap. Claude Code and Codex are installation examples, not the only intended hosts. The Claude Code marketplace offers the full `cgz-all` bundle or individual skills; other hosts require adaptation to their own skill specifications and have not all been tested.
 
-This update prepares **2.1.0**, adding a saved document-language preference: choose Simplified Chinese (`zh-CN`), English (`en`), or another explicitly named language during initialization. Skills follow the [Agent Skills specification](https://agentskills.io/specification). Their instructions and reference documents remain primarily in Chinese; generated document prose follows the language rules below, rather than the language of those instructions. This is configurable output, not a claim that every language or host has been tested.
+The current `main` contains **2.1.0**, adding a saved document-language preference: choose Simplified Chinese (`zh-CN`), English (`en`), or another explicitly named language during initialization. Skills follow the [Agent Skills specification](https://agentskills.io/specification). Their instructions and reference documents remain primarily in Chinese; generated document prose follows the language rules below, rather than the language of those instructions. This is configurable output, not a claim that every language or host has been tested.
 
 ## Ask your AI to install it
 
@@ -132,11 +134,25 @@ These are file-handling instructions executed by the agent. They do not provide 
 
 ## Upgrading from 2.0 to 2.1
 
-Update the complete skill directories, then run `cgz-init` to confirm and save the missing `document_language`. Preserve your existing author alias and UUID. Already configured preferences remain in place unless you explicitly ask to change them. Resolve any missing shared-file language separately from your personal preference. Existing files stay intact; there is no automatic translation or history migration.
+### What changes
 
-The repository homepage is now English. The complete Chinese guide is [README.zh-CN.md](README.zh-CN.md); the old [README.en.md](README.en.md) URL remains a compatibility entry. At the time of this update, [v2.0.0](https://github.com/sakanaovo/cgzskill/releases/tag/v2.0.0) is the published release and does not include the language feature. This change prepares 2.1.0; no `v2.1.0` tag or release has been created. The installation prompt uses the current `main`, so verify that it contains this update before expecting the new behavior.
+- **Personal output language:** `.cgz/local.json` gains `document_language`. New personal documents use the current request first, then your saved preference, then the project convention; ask if none exists. A one-time request does not change the saved default.
+- **Separate team language:** `docs/cgz-memory.md` records `project_document_language`. Shared instructions and accepted rules keep the project language; a personal preference cannot override it.
+- **Traceable new records:** each new record stores its actual output `document_language`. Recap reuse requires the same language as well as the same sources, author, date, and scope, with no new facts. A different language creates a separate summary without changing the old one or counting it as new evidence.
+- **English homepage:** this does not require shared project documents to become English or change your Chinese or other personal output choice. The complete Chinese guide is now [README.zh-CN.md](README.zh-CN.md); [README.en.md](README.en.md) remains a compatibility entry.
 
-## Upgrading from 1.x
+### What existing users should do
+
+1. Review and preserve local customizations, then update **complete skill directories**, including references and assets, through your host's supported update method. Copying only `SKILL.md`, or using the fresh-install `cp -Rn` example, does not upgrade an existing installation.
+2. Verify that the host loaded the updated skills, then invoke init through its actual entry: `/cgz-all:cgz-init` for the Claude Code bundle, `/cgz-init:cgz-init` for the individual plugin, or `$cgz-init` / the skill picker in Codex. For other hosts, follow their own invocation rules.
+3. Let init check for missing language settings. An old `.cgz/local.json` without the language field is still a valid identity: add the missing field after confirmation, retaining the author alias, UUID, and other fields. Correct existing settings are preserved without asking again. Confirm a shared language only if the project has no established convention. If existing language or team rules conflict, resolve that conflict explicitly rather than silently replacing them.
+4. Check the local preference and shared protocol separately. Existing records are **not translated, moved, or migrated**; old records are not backfilled with guessed language metadata. Paths, schema fields, IDs, source quotations, and accepted rules remain intact. Changed preferences affect future documents only.
+
+**Version and verification status at this documentation update (2026-11-03):** `main` version files are **2.1.0**. Check [Releases](https://github.com/sakanaovo/cgzskill/releases) for the latest published stable version; version files alone do not establish a tag or release. The published [v2.0.0 release](https://github.com/sakanaovo/cgzskill/releases/tag/v2.0.0) does not include this language feature; no `v2.1.0` tag or GitHub Release has been created as of this check. Installing the existing release therefore differs from installing current `main`; the old release is not replaced. All 33 tooling/configuration/template contract tests and the five-skill validator pass, but these checks are **not multilingual or multi-host end-to-end tests**. See the [manual acceptance checklist](docs/team-acceptance.md).
+
+The naming changes, independent UUID records, and removal of the Obsidian dependency below happened in **1.x → 2.0**, not in this 2.0 → 2.1 update.
+
+## Upgrading from 1.x to 2.0
 
 - Four skill and plugin names now have the `cgz-` prefix: `focused-discussion`, `focused-reading`, `archive-session`, and `daily-recap`. Update old installation entries and command references to their names shown above. `cgz-init` keeps its name.
 - `cgz-all` installs all five skills together. Review old installed plugins before choosing the bundle so both versions are not loaded at once.
