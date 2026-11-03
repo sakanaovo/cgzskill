@@ -180,6 +180,15 @@ git push origin main --tags
 - `description` ≤ 1024 字符
 - `SKILL.md` 正文 ≤ 500 行
 
+CI 同时运行工具脚本的回归测试。本地检查：
+
+```bash
+python3 .github/scripts/validate_skills.py
+python3 -m unittest discover -s tests -v
+```
+
+回归测试使用临时目录，不修改仓库版本或变更日志。
+
 校验失败的 PR 不会被合。
 
 ---
@@ -198,3 +207,13 @@ git push origin main --tags
 - 官方规范：<https://agentskills.io/specification>
 - 校验工具：`skills-ref validate ./skills/<name>`（来自 [agentskills/agentskills](https://github.com/agentskills/agentskills)）
 - 本仓库 CI：`python3 .github/scripts/validate_skills.py`
+
+
+## 团队记录兼容性
+
+- 新的归档、教训和复盘使用独立随机 `record_id` 文件；不得恢复对共享日志、索引或规则文件的自动追加。
+- `.cgz/local.json` 只存已确认的作者别名与随机作者 ID，精确忽略；共享模板不得含个人身份、密钥或 email。
+- 原始记录不可变；同义且同范围只在汇总层合并并保留来源，矛盾标 `pending`，采纳规则必须有授权或团队 PR 审核。
+- 每个 plugin 可独立安装，禁止引用其他 plugin 目录里的必需文件；项目 `docs/cgz-memory.md` 不存在时入口仍须有最小流程。
+- 修改协议时同步入口、references、init 模板、README、marketplace 和契约测试。测试区分 Python 工具回归、文本/模板契约与真实 agent 手工验收；不把前两者称为端到端实测。
+- 本轮行为变化先记入 `Unreleased`，不自动发布。独立不可变记录及移除外部 vault 输出改变既有行为，正式发布前由维护者按上文流程决定 major bump。

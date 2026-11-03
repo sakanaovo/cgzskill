@@ -1,15 +1,15 @@
 # 每日复盘规范
 
-cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成一份 Obsidian 友好的 Daily note。本文件是判定依据，分五大节。
+cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成一份项目内的 Markdown 日复盘。本文件是判定依据，分五大节。
 
 ---
 
 ## 一、五原则
 
-1. **只写当天事实。** 跨天的事在对应日期的 Daily note 里写，禁止把今天的复盘塞昨天的内容。
+1. **只写目标日期的事实。** 默认复盘今天；用户确认补昨天或指定日期时，只处理该日期，禁止跨天混写。
 2. **不重新分析。** 归档里写过的结论原样引用，禁止借机重排逻辑、补深度。
 3. **不补方案。** 用户没问的方案、工时、优先级一律不出现。
-4. **跨会话只从落地文件读。** 早些会话的事实必须来自 `docs/archives/*` 或 `docs/ai-lessons.md`，禁止凭印象。
+4. **跨会话只从落地文件读。** 早些会话的事实必须来自项目约定的归档位置（默认 `docs/archives/*`）或 `docs/ai-lessons.md`，禁止凭印象。
 5. **用户未确认前不写。** 主动建议归档时必须先问，禁止擅自落盘。
 
 ---
@@ -18,9 +18,9 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 
 1. **触发** —— 是用户显式要求复盘，还是 agent 自检建议（建议必须经用户确认）。
 2. **数据源** —— 是否完整列出读了哪些 archives / lessons / 会话片段。
-3. **输出位置** —— 是否在 `${obsidian_vault}/Daily/YYYY-MM-DD.md`，不是项目内的其他位置。
-4. **链接合法** —— 所有 wikilink 指向的文件是否真存在；禁止 `[[未来的笔记]]`。
-5. **语言** —— 中文段落是否夹裸英文；YAML 字段名 / wikilink 是否保留原文。
+3. **输出位置** —— 是否在项目 `docs/daily/YYYY-MM-DD-<record_id>.md`；缺输出目录时是否已确认创建。
+4. **链接合法** —— 普通 Markdown 相对链接是否真实可达；禁止链接到不存在的文件。
+5. **语言** —— 中文段落是否夹裸英文；文件名、路径是否保留原文。
 
 ---
 
@@ -29,8 +29,8 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 1. **重复分析冲动** —— agent 看到归档就忍不住「再总结一遍」，结果复盘变成新分析。
 2. **完整性焦虑** —— 把今天没真正落地的「想法」也写进复盘，证明「这一天有产出」。
 3. **过度拼凑** —— 归档之间没有真实关联时硬扯关系，制造伪叙事。
-4. **链接编造** —— 想用 wikilink 显得 Obsidian-native，结果指向不存在的文件。
-5. **时间错乱** —— 把昨天没复盘的事补进今天的 Daily note，污染日期边界。
+4. **链接编造** —— 把未经核实的路径变成链接，结果指向不存在的文件。
+5. **时间错乱** —— 把昨天没复盘的事补进今天的日复盘，污染日期边界。
 
 ---
 
@@ -43,7 +43,7 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 **询问必须单一**：
 
 - 主动建议复盘：「今天已经有 N 份归档落地，还没写日复盘。要现在生成吗？」
-- Daily note 已存在：「`Daily/YYYY-MM-DD.md` 已存在。覆盖 / 追加 / 取消？」
+- 日复盘已存在：「已有摘要可追溯。同源复用 / 新建更正 / 取消？」来源变更时只能新增独立记录，不能覆盖或追加旧摘要。
 
 禁止：
 
@@ -57,7 +57,7 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 日复盘已写。
 
 文件：
-- ${obsidian_vault}/Daily/YYYY-MM-DD.md
+- docs/daily/YYYY-MM-DD-<record_id>.md
 
 收录：
 - 归档 N 份
@@ -65,7 +65,7 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 - 未决问题 K 条
 
 下一步：
-- 在 Obsidian 里打开核对，必要时手改
+- 打开该文件核对，必要时手改
 ```
 
 禁止在收尾里展开新方案、补使用教程、给明天的建议。
@@ -77,14 +77,12 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 **中文段落不夹裸英文 token**：
 
 - `recap` → 复盘
-- `daily note` → 日复盘 / Daily note（首次出现括注）
-- `vault` → vault（Obsidian 术语，保留原文）
+- `daily note` → 日复盘
 
 **保留纯英文**：
 
-- YAML 字段名：`date` / `tags` / `related` / `aliases`
-- Obsidian wikilink 语法：`[[file]]`、`[[file|alias]]`
-- 标准 section 名约定（如保留 `Daily` 目录名）
+- Markdown 链接的文件路径
+- 标准目录名（如 `docs/daily/`）
 
 **表格里同一格不混语言。**
 
@@ -92,33 +90,25 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 
 ---
 
-## 配置读取
+## 输出位置与确认
 
-启动时必须先确认 `AGENTS.md` 里存在 `## cgz 配置` 段，并从中读 `obsidian_vault` 路径。
+项目 `docs/daily/YYYY-MM-DD-<record_id>.md` 是固定输出位置，不要求 `AGENTS.md`、cgz 配置段或先运行 `cgz-init`。缺输出目录时先确认是否创建。用户明确要求复盘即授权创建该独立记录；主动建议必须确认。已有记录保留不动。
 
-**判定标准**：
-
-| 状态 | 行为 |
-| --- | --- |
-| 段落存在且 `obsidian_vault` 有值 | 用该路径继续 |
-| 段落存在但 `obsidian_vault` 空 | 提示：「cgz-daily-recap 已禁用（vault 留空）」，不写文件 |
-| 段落不存在 | 提示：「先跑 /cgz-init 补 cgz 配置段，再回来」 |
-
-**禁止**：
-
-- 禁止假设默认 vault 路径（如 `~/Obsidian`）。
-- 禁止把路径写死在 skill 文件里。
-- 禁止在 vault 路径之外写 Daily note。
+旧 Obsidian 配置保留不动，本轮不读取、不使用，也不向旧 vault 写入。用户曾明确禁用日复盘时，不自动恢复，先确认是否重新启用。只移除外部应用集成要求，保留项目内复盘能力。
 
 ---
 
 ## 数据源读取规范
 
-按顺序读：
+先确定唯一的**目标复盘日期**：默认今天；用户确认补昨天或指定其他日期时，换成该日期。将其写为绝对日期 `YYYY-MM-DD`，所有数据筛选、文件名、标题和收尾路径使用同一日期。日期有歧义时先问，禁止根据文件修改时间猜测。
 
-### 1. 当天 archives
+按顺序读；缺失的归档或教训日志跳过并说明，不要求先初始化。只有当前会话时只收录可核实的目标日期事实：
 
-扫描 `docs/archives/` 下文件名含今天日期（`YYYY-MM-DD-*`）的文件。
+### 1. 目标日期的 archives
+
+先读取项目说明中明确约定的归档目录、索引或单文件，沿用 `cgz-archive-session` 的路由；无约定时使用 `docs/archives/`。例如项目约定 `docs/worklog.md` 或 `docs/session-archive.md` 时，读取其中日期明确匹配目标日期的小节，而不是只找默认目录。
+
+目录模式按目标日期（`YYYY-MM-DD-*`）筛选文件；索引模式只跟随属于目标日期的归档条目；单文件模式按日期标题筛选。记录日期冲突或不明确时先询问，不猜测。没有对应记录时明示无资料。
 
 每份归档提取：
 
@@ -130,31 +120,24 @@ cgz-daily-recap 的目标：把当天散落的归档、教训、决策聚合成�
 
 禁止：
 
-- 禁止读不在当天日期的归档。
-- 禁止读 archives 之外的目录（如 `docs/architecture/`）作为「今天发生的事」。
+- 禁止读不在目标日期的归档。
+- 禁止超出项目明确约定的归档范围全盘搜索；无日期依据的架构文档等不能当作「目标日期发生的事」。
 
-### 2. 当天 lessons
+### 2. 目标日期的 lessons
 
-扫描 `docs/ai-lessons.md` 顶部当天追加的条目（按日期判断）。
+扫描 `docs/ai-lessons.md` 中属于目标日期的条目（按日期判断）。
 
-每条只摘要规则文字（`Rule` 字段），不展开 Trigger / Wrong / Correction。详细规则原文留在 `ai-lessons.md` 里，复盘只做索引。
+读取独立 `docs/lessons/` 中目标日期的候选教训，兼容读取旧 `docs/ai-lessons.md` 中带日期的历史记录；后者同时是已采纳规则入口，不自动追加。只摘要 `Proposed Rule`（兼容旧 `Rule`）并保留候选 / 已采纳 / pending 状态，不能把新教训自动当成生效规则。
 
 ### 3. 当前会话上下文
 
-仅用于补充**尚未落盘**的当下决策。若决策已在 archives 里，禁止再写一遍。
+仅用于补充**尚未落盘**且可核实发生在目标日期的决策。若决策已在 archives 里，禁止再写一遍。
 
 ---
 
 ## 输出结构
 
 ```markdown
----
-date: YYYY-MM-DD
-tags: [daily, recap, cgz]
-related:
-  - "[[YYYY-MM-DD-yesterday]]"   # 仅当昨天的 Daily note 真实存在时才加
----
-
 # YYYY-MM-DD
 
 ## 主要决策
@@ -163,11 +146,11 @@ related:
 
 ## 改过的文件
 
-- [[path/to/file]]   # Obsidian wikilink；用项目相对路径
+- `path/to/file`   # 核实存在后生成相对于本复盘文件的 Markdown 链接
 
 ## 新增 lessons
 
-- [Rule 一句话摘要]（详见 [[docs/ai-lessons.md]]）
+- [Rule 一句话摘要]（链接到对应 `../lessons/<record-file>.md` 或旧教训来源）
 
 ## 未决问题
 
@@ -175,25 +158,23 @@ related:
 
 ## 明天先看
 
-- [[next-archive-or-doc]]
+- `path/to/next-archive-or-doc`   # 只列已存在文件
 ```
 
 ### 字段规则
 
-- `date`：绝对日期。
-- `tags`：固定 `[daily, recap, cgz]`，禁止添加项目相关 tag（那是用户的事）。
-- `related`：只指向**真实存在**的 daily note；昨天的 Daily 不存在就省略整个字段。
+- 文件名和标题使用绝对日期 `YYYY-MM-DD`。
+- 从 `docs/daily/` 计算普通 Markdown 相对链接；例如教训日志存在时使用 `[教训日志](../ai-lessons.md)`。
+- 目标不存在或不能可靠链接时保留路径文本，禁止编造链接或未来文件。
 - 每个段落允许为空。空段保留标题写「（无）」，禁止省略段落让结构不对称。
 
-### 已存在 Daily note 的处理
+### 重复汇总与并发
 
-询问用户三选一：
-
-- **覆盖** —— 写新版本，旧内容丢失。
-- **追加** —— 新内容追加在原文末尾，前置 `---` + 时间戳子标题 `## HH:mm 追加`。
-- **取消** —— 不写。
-
-禁止默认选择，必须用户明确。
+- 日复盘也是独立记录，按本节协议使用随机 `record_id`，不同作者或同人多会话不争用同名文件。
+- 只从归档、教训和可核实的当前会话事实汇总，不把 `docs/daily/` 的旧摘要递归当作新来源。旧日复盘仅用于检查是否已经汇总同一来源集合。
+- 先按来源 `record_id` 去重，再按同义及范围合并；旧无 ID 记录用项目相对路径 + 日期小节作为稳定来源定位，禁止回写补 ID。
+- 同一作者、同一目标日期、同一范围、同一来源集合且没有新增会话事实时，复用已有摘要路径，不重复创建或计数。不同作者的独立摘要可以共存，不作为彼此的新事实源。
+- 来源集合变化或有新会话事实时新建摘要，注明来源和更正关系，保留旧摘要。并发独占创建失败时换新 UUID，不覆盖。
 
 ---
 
@@ -201,8 +182,40 @@ related:
 
 | 不写 | 原因 |
 | --- | --- |
-| 今天没真正发生的事 | 复盘是日志不是计划 |
+| 目标日期没真正发生的事 | 复盘是日志不是计划 |
 | 归档已有的细节复制 | 复盘是索引，重复 = 噪声 |
 | 用户没确认的偏好 | 偏好走 `ai-lessons.md`，不进日复盘 |
 | 明天的方案 / 工时 / 优先级 | 没人问 |
 | 心情 / 元评论（「今天很高效」）| 复盘是事实，不是情绪 |
+
+---
+
+## 团队记录协议
+
+本 skill 可独立使用，不要求完整安装或先初始化。项目已有 `docs/cgz-memory.md` 时读取其约定；没有时使用本节最小协议，不读取主目录或无关仓库。
+
+1. 读取项目本地 `.cgz/local.json` 的 `author_id` / `author_alias`。缺失时先确认作者别名（`git user.name` 仅候选，不取 email），生成随机 UUID 作为 `author_id`；经确认创建身份并在项目 `.gitignore` 精确添加 `/.cgz/local.json`。无 Git 也可使用。不得写 Git 全局配置。已有身份原样保留；格式异常、忽略规则无效或文件已被 Git 跟踪时先报告并确认，禁止自动改历史。
+2. 每次新记录生成独立随机 UUID `record_id`；日期、作者别名、分支和时间戳都不是唯一性保证。用独占创建方式写 `YYYY-MM-DD-<record_id>.md`；目标已存在时重新生成 ID，禁止覆盖。一次已完成的写入重试先核对该 ID，不再新建重复记录。
+3. 文件头包含以下元数据，再接本 skill 的正文模板。`date` 是事实所属日期；`recorded_at` 是实际记录时间（ISO 8601，含时区）。作者只是来源标记，不是认证身份；不同机器的作者 ID 不自动合并。
+
+```yaml
+---
+record_id: "<random UUID>"
+author_id: "<local author UUID>"
+author_alias: "<confirmed alias>"
+date: "YYYY-MM-DD"
+recorded_at: "YYYY-MM-DDTHH:mm:ss+08:00"
+scope: "<project-relative path or explicit project scope>"
+verification: "unverified" # verified / unverified / pending; include evidence in body
+branch: null # current branch if available; detached HEAD uses null
+base_commit: null # current HEAD commit if available; never guess
+source_ids: [] # source IDs for summaries or corrections
+supersedes: [] # IDs corrected by a new record; originals remain
+---
+```
+
+4. 原始记录不可改写或去重删除；更正写新记录并填 `supersedes`。不得存密钥、令牌或不必要的个人信息，不自动存 email。新教训写 `docs/lessons/YYYY-MM-DD-<record_id>.md`，正文按 Trigger / Wrong / Correction / Proposed Rule / Scope / Verification / Sources 记录；规则是候选而非已生效。
+5. 汇总层：同义且同范围合并一条并保留全部来源 ID / 路径、作者、日期和验证状态；不同互补内容保留；范围不同则带范围保留；同范围矛盾标 `pending` 等待确认，不用最后写入覆盖。禁止将未验证或冲突内容提升为生效规则。
+6. 禁止每次记录都追加共享索引、`AGENTS.md` 或 `docs/ai-lessons.md`。目录按日期检索即可；后者是已采纳规则入口，只有明确采纳授权或团队正常 PR 审核后才改。这里是 agent 执行规则，不是后台监听、同步或自动 Git 合并服务。
+
+`supersedes` 只声明纠正关系，不代表规则已获采纳。只有同范围且存在明确用户或团队采纳证据时，汇总才将旧条目标为已被替代并保留来源；未确认的冲突仍为 `pending`，不能按时间先后决定。`branch` / `base_commit` 只是来源，不证明分支已合入或结论已获团队确认。

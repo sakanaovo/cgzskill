@@ -25,12 +25,24 @@
 | **`cgz-focused-discussion`** | 对话纪律 —— 强制 Claude 单线收敛,禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级。专治"一对话就跑偏"。 | 用户讨论 PR / 产品 / 架构 / UX 时;或说「跑偏了」「聚焦」「先停一下」「先看反馈」 | `/cgz-focused-discussion` |
 | **`cgz-archive-session`** | 会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文写进项目 docs,禁止新增分析。 | 用户说「归档」「收尾」「先到这」「交接」;或 agent 自检发现上下文过长 / 分支过多时主动建议归档 | `/cgz-archive-session` |
 | **`cgz-focused-reading`** | 专注阅读 —— 看文档、源码、PR、日志、网页、图文和长上下文时只回答当前问题,禁止扩题。 | 用户说「读一下」「看看文档」「理解上下文」「看这个 PR / 日志 / 图文」 | `/cgz-focused-reading` |
-| **`cgz-init`** | 启动检测 —— 在新项目里扫描 `AGENTS.md` / `docs/ai-lessons.md` / `docs/archives/` 是否就位,缺失则询问后生成;同时询问并写入 `obsidian_vault` 配置供 cgz-daily-recap 使用。一次性操作。 | 用户说「初始化 cgz」「启动 cgz」「让 AI 学这套」;或在新项目首次调用其他 cgz skill 但缺记忆架构时主动建议 | `/cgz-init` |
-| **`cgz-daily-recap`** | 每日复盘 —— 按天聚合当日 `docs/archives/` / `docs/ai-lessons.md` / 会话上下文,写一份 Obsidian 友好的 `Daily/YYYY-MM-DD.md`(YAML frontmatter + `[[wikilinks]]`)到 `obsidian_vault`。 | 用户说「今天复盘」「收尾今天」「daily recap」「日报」;或当天首次启动检测到昨天有未复盘归档时主动建议 | `/cgz-daily-recap` |
+| **`cgz-init`** | 启动检测 —— 在新项目里扫描 `AGENTS.md` / `docs/ai-lessons.md` / `docs/archives/` 是否就位,缺失则经一次身份确认后生成，不要求外部应用配置。一次性操作。 | 用户说「初始化 cgz」「启动 cgz」「让 AI 学这套」;或在新项目首次调用其他 cgz skill 但缺记忆架构时主动建议 | `/cgz-init` |
+| **`cgz-daily-recap`** | 每日复盘 —— 按天聚合当日 `docs/archives/` / `docs/ai-lessons.md` / 会话上下文,写一份项目内 `docs/daily/YYYY-MM-DD-<record_id>.md`，使用普通 Markdown。 | 用户说「今天复盘」「收尾今天」「daily recap」「日报」;或当天首次启动检测到昨天有未复盘归档时主动建议 | `/cgz-daily-recap` |
 
 > 五个 skill 共用同一份骨架(写在各自 `references/`):**五原则 / 五维度 / 五心理学 / 对话严苛规则 / 语言纯化规则**。SKILL.md 是入口,references 是判定依据。
 >
-> **整体设计**:`cgz-init` 在项目里铺好「记忆架构」(AGENTS.md / docs/ai-lessons.md / docs/archives/) + 配置 `obsidian_vault`;`cgz-focused-reading` / `cgz-focused-discussion` / `cgz-archive-session` 在每次会话里读写这套记忆;`cgz-daily-recap` 按天把当日上下文聚合成 Obsidian Daily note。AI 不能自动学习,但下次启动读到这些文件就「像学会了」。
+> **整体设计**:`cgz-init` 在项目里铺好「记忆架构」(AGENTS.md / docs/ai-lessons.md / docs/archives/);`cgz-focused-reading` / `cgz-focused-discussion` / `cgz-archive-session` 在每次会话里读写这套记忆;`cgz-daily-recap` 按天把当日上下文聚合成项目内日复盘，不要求先初始化。AI 不能自动学习,但下次启动读到这些文件就「像学会了」。
+
+> **Obsidian 集成已从核心流程移除**：初始化不问 vault，复盘不读旧 vault 配置，也不向外部目录写入。已有项目配置原样保留。只移除集成要求，保留复盘能力；Obsidian 接入尚未实测，不宣称已支持。
+
+## 团队开箱使用
+
+1. 安装所需 skill，在项目里运行 `/cgz-init`，首次确认作者别名。Git 用户名只是候选，不用 email 识别人；没有 Git 也能使用。
+2. 初始化创建本地 `.cgz/local.json`（随机 `author_id`），仅用 `/.cgz/local.json` 精确忽略；团队协议在 `docs/cgz-memory.md`。已有文件和身份不覆盖，旧记录不搬移。每个工作副本独立身份，不写全局 Git 配置。
+3. 归档写 `docs/archives/YYYY-MM-DD-<record_id>.md`，候选教训写 `docs/lessons/YYYY-MM-DD-<record_id>.md`，复盘写 `docs/daily/YYYY-MM-DD-<record_id>.md`。每次新记录用随机 UUID；作者、日期、分支不是唯一性保证。
+4. 原始记录不可改写或去重删除；修正用新记录引用旧 ID。不会每次追加共享索引、`AGENTS.md` 或 `docs/ai-lessons.md`。后者是稳定规则入口，采纳候选规则须明确确认或团队 PR 审核。
+5. 汇总同义且同范围合并并保留全部来源；互补差异保留，不同范围标范围，同范围矛盾标 `pending`。不采用最后写入覆盖；同来源集合重复复盘不重复计数，也不把日报递归当新来源。
+
+这是 agent 执行的文件协议，不是账号系统、后台监听或自动 Git 合并服务；`author_id` 不是身份认证。初始化授权只涵盖列出的项目骨架和精确忽略项，不读取主目录、不改业务代码、不存密钥。单独安装阅读/讨论无需初始化；归档/复盘各自含最小身份与记录协议。
 
 ## 仓库结构
 
@@ -67,7 +79,9 @@ cgzskill/
 │   │   └── assets/                   # 生成到用户项目的模板
 │   │       ├── AGENTS.md.template
 │   │       ├── ai-lessons.md.template
-│   │       └── archives-README.md.template
+│   │       ├── archives-README.md.template
+│   │       ├── local.json.template
+│   │       └── cgz-memory.md.template
 │   └── cgz-daily-recap/
 │       ├── SKILL.md
 │       ├── agents/openai.yaml
@@ -127,13 +141,9 @@ cp -r skills/cgz-init ~/.codex/skills/
 cp -r skills/cgz-daily-recap ~/.codex/skills/
 ```
 
-如果目标 agent 不支持 skill 自动加载,再退化成项目说明方式:
+如果目标 agent 不支持 skill 自动加载，需要保留完整 skill 目录（包括 `SKILL.md`、`references/` 和已有 `assets/`），并按目标 agent 的说明手动适配入口和引用路径。禁止只把 `SKILL.md` 拼接到 `AGENTS.md`：入口依赖的规范和模板不会随文本自动复制。
 
-```bash
-cat skills/cgz-focused-discussion/SKILL.md >> /path/to/your-project/AGENTS.md
-```
-
-> 不同 agent 对 Agent Skills 的加载方式不完全一致。Claude Code 优先走 plugin / marketplace;Codex 优先走本地 skills 目录;其他 agent 可把规则放进项目说明文件。
+> 不同 agent 对 Agent Skills 的加载方式不完全一致。Claude Code 优先走 plugin / marketplace；Codex 优先复制完整 skill 目录；其他 agent 的手动适配不等于已验证支持。
 
 ---
 

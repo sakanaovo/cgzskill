@@ -20,7 +20,7 @@
     },
     {
       "name": "cgz-archive-session",
-      "description": "会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文压缩进项目文档。禁止新增分析、禁止补方案、禁止评工时,只保留事实和下一步。",
+      "description": "会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文压缩进独立随机 ID 的项目记录，保留作者与来源；禁止自动追加共享索引。禁止新增分析、禁止补方案、禁止评工时,只保留事实和下一步。",
       "source": "./",
       "strict": false,
       "version": "1.1.0",
@@ -40,22 +40,22 @@
     },
     {
       "name": "cgz-init",
-      "description": "cgz 启动检测 —— 在新项目里扫描 AGENTS.md / docs/ai-lessons.md / docs/archives/ 是否就位，缺失则询问后生成；同时询问并写入 obsidian_vault 配置供 cgz-daily-recap 使用。一次性操作，禁止覆盖已存在文件、禁止动业务代码。",
+      "description": "cgz 启动检测 —— 在新项目里扫描 AGENTS.md / docs/ai-lessons.md / docs/archives/ 是否就位，一次确认作者别名后生成本地身份和项目骨架，不要求外部应用配置。一次性操作，禁止覆盖已存在文件、禁止动业务代码。",
       "source": "./",
       "strict": false,
       "version": "1.1.0",
       "category": "bootstrap",
-      "keywords": ["init", "bootstrap", "memory", "scaffold", "project", "agents-md", "lessons", "obsidian", "chinese"],
+      "keywords": ["init", "bootstrap", "memory", "scaffold", "project", "agents-md", "lessons", "chinese"],
       "skills": ["./skills/cgz-init"]
     },
     {
       "name": "cgz-daily-recap",
-      "description": "每日复盘 —— 按天聚合 docs/archives/、docs/ai-lessons.md 与当前会话上下文，写一份 Obsidian 友好的 Daily/YYYY-MM-DD.md（YAML frontmatter + [[wikilinks]]）。禁止重新分析、禁止编造链接、禁止跨天混写；读取 AGENTS.md 的 obsidian_vault 配置。",
+      "description": "每日复盘 —— 按天聚合 docs/archives/、docs/ai-lessons.md 与当前会话上下文，写一份项目内 docs/daily/YYYY-MM-DD-<record_id>.md，使用普通 Markdown。禁止重新分析、禁止编造链接、禁止跨天混写；按来源去重、矛盾标 pending，不递归汇总日报。",
       "source": "./",
       "strict": false,
       "version": "1.0.0",
       "category": "recap",
-      "keywords": ["daily", "recap", "obsidian", "review", "summary", "vault", "wikilink", "chinese"],
+      "keywords": ["daily", "recap", "review", "summary", "chinese"],
       "skills": ["./skills/cgz-daily-recap"]
     },
     {
