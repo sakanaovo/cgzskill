@@ -1,8 +1,12 @@
+<!-- 模板渲染提示：生成时删除本提示；将标题和说明写成 docs/cgz-memory.md 中 project_document_language 指定的项目语言。路径、字段、ID、状态值及来源原文保持不变。 -->
+
 # AGENTS.md
 
 ## cgz 记忆体系
 
 团队记忆协议见 `docs/cgz-memory.md`。共享规则和本地作者身份分离；本地身份在忽略的 `.cgz/local.json`，不用于身份认证。
+
+本文件、团队协议和已采纳规则遵守 `docs/cgz-memory.md` 的 `project_document_language` 或现有明确项目语言约定；个人 `document_language` 不覆盖共享语言。个人新文档按本次明确要求、本地 `document_language`、项目约定依次选择，仍无依据时首次询问。语言改变只影响之后新文档，不重写历史；原文引用保留，需要译文时另列并标明。
 
 1. **读取**：只读当前任务相关材料，区分事实、推断和未验证点。
 2. **讨论**：先闭合当前问题，不主动扩题。

@@ -1,4 +1,4 @@
 interface:
   display_name: "cgz Init"
-  short_description: "确认作者别名后初始化团队记忆骨架，保留已有身份与文件"
-  default_prompt: "扫描已有项目骨架，首次确认作者别名，初始化本地身份和独立记录目录；仅忽略 .cgz/local.json，保留已有文件，不修改业务代码或全局 Git 配置。"
+  short_description: "确认作者别名与中英或其他文档语言，保留身份并初始化团队记忆骨架"
+  default_prompt: "使用 $cgz-init 扫描项目，合并确认缺少的作者别名、个人及项目共享文档语言，把个人 document_language 存入仅本地的 .cgz/local.json，把 project_document_language 记录到 docs/cgz-memory.md；已有项目语言不再询问，个人偏好不覆盖团队语言，旧身份仅补语言字段，保留 UUID、别名和历史，不修改业务代码或全局 Git 配置。"

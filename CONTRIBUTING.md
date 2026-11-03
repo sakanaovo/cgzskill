@@ -40,7 +40,7 @@ description: "1-1024 字符。描述「做什么 + 何时用」，必须含触�
 2. **五维度** —— 发送 / 写入前的硬性自检
 3. **五心理学** —— 失败模式背后的认知机制
 4. **对话严苛规则** —— 允许 / 禁止句式，禁止铺垫与客套
-5. **语言纯化规则** —— 中文段落不夹裸英文，英文模板保留纯英文
+5. **语言纯化规则** —— 按选定文档语言输出，稳定字段、路径、ID 和来源原文保留
 
 参考实现：
 
@@ -53,8 +53,8 @@ description: "1-1024 字符。描述「做什么 + 何时用」，必须含触�
 ```yaml
 interface:
   display_name: "Skill Title"
-  short_description: "一句中文短描述，不加句号"
-  default_prompt: "host 调用 skill 时使用的一句中文指令"
+  short_description: "一句清楚的短描述，不加句号"
+  default_prompt: "host 调用 skill 时使用的简短指令，生成文档遵循语言配置"
 ```
 
 每个 skill 都必须有这份文件，字段完整。
@@ -66,7 +66,7 @@ interface:
 ```json
 {
   "name": "<skill-name>",
-  "description": "对中文用户友好的简短描述,语气与 SKILL.md 保持一致(禁止/必须/立刻)。",
+  "description": "对目标用户清楚的简短描述,语气与 SKILL.md 保持一致(禁止/必须/立刻)。",
   "source": "./",
   "strict": false,
   "version": "1.0.0",
@@ -217,3 +217,10 @@ python3 -m unittest discover -s tests -v
 - 每个 plugin 可独立安装，禁止引用其他 plugin 目录里的必需文件；项目 `docs/cgz-memory.md` 不存在时入口仍须有最小流程。
 - 修改协议时同步入口、references、init 模板、README、marketplace 和契约测试。测试区分 Python 工具回归、文本/模板契约与真实 agent 手工验收；不把前两者称为端到端实测。
 - 行为变化先记入 `Unreleased`，通过 `scripts/bump.py` 整理版本。2.0.0 已将独立不可变记录、名称迁移及移除外部 vault 输出作为不兼容变化归档；后续依改动性质决定 bump，版本文件更新不自动创建 Git tag 或 GitHub Release。
+
+
+## 文档语言兼容性
+
+新文档按本次明确请求、本地 `document_language`、项目约定、首次询问的顺序确定语言。共享文件遵循项目 `project_document_language` 或已有约定，不能被个人配置覆盖。新增本地语言字段不得重生成身份、丢弃未知字段或改写历史；单次语言请求不自动保存为长期偏好。
+
+首页 `README.md` 使用英文，中文内容在 `README.zh-CN.md`，`README.en.md` 保留兼容入口。模板说明采用中文不代表生成文件必须中文；代码、schema、路径、ID 和来源引用不翻译。增加语言能力时同时检查五个 skill、模板、入口链接和契约测试，不把契约通过称为任意语言实测。
