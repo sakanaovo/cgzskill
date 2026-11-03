@@ -33,18 +33,21 @@ COMPATIBILITY_MAX = 500
 
 
 def parse_frontmatter(text: str) -> tuple[dict, str] | None:
-    if not text.startswith("---"):
+    lines = text.splitlines(keepends=True)
+    if not lines or lines[0].rstrip("\r\n") != "---":
         return None
-    parts = text.split("---", 2)
-    if len(parts) < 3:
+    for end in range(1, len(lines)):
+        if lines[end].rstrip("\r\n") == "---":
+            break
+    else:
         return None
     try:
-        meta = yaml.safe_load(parts[1]) or {}
+        meta = yaml.safe_load("".join(lines[1:end])) or {}
     except yaml.YAMLError:
         return None
     if not isinstance(meta, dict):
         return None
-    return meta, parts[2]
+    return meta, lines[end][3:] + "".join(lines[end + 1 :])
 
 
 def validate_skill(skill_dir: Path) -> list[str]:

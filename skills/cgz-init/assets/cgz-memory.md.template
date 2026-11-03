@@ -1,0 +1,60 @@
+# cgz 团队记忆协议
+
+共享规则在项目内，本地身份在 `.cgz/local.json`；该文件必须由精确的 `/.cgz/local.json` 忽略条目保护。身份不是账号或认证，不记录邮箱、密钥或凭据。
+
+## 独立记录
+
+- 归档：`docs/archives/YYYY-MM-DD-<record_id>.md`
+- 新教训：`docs/lessons/YYYY-MM-DD-<record_id>.md`
+- 日复盘：`docs/daily/YYYY-MM-DD-<record_id>.md`
+
+`record_id` 每份记录独立生成随机 UUID；作者、日期、分支或主题都不能替代唯一 ID。写入前检查路径并排他创建；已存在则重新生成 ID，禁止覆盖。原始记录不可修改或删除，纠正时写新记录并以 `supersedes` 引用旧 `record_id`。同一人多会话、不同机器和分支均不争写同一文件。
+
+所有新记录包含以下元数据，按 YAML 正确转义字符串：
+
+```yaml
+---
+record_id: "<new random UUID>"
+author_id: "<local author UUID>"
+author_alias: "<confirmed alias>"
+date: "YYYY-MM-DD"
+recorded_at: "YYYY-MM-DDTHH:mm:ss+08:00"
+scope: "<project / path / component / branch applicability>"
+verification: "unverified"
+branch: null
+base_commit: null
+source_ids: []
+supersedes: []
+---
+```
+
+- `date` 是事实所属日期；日复盘是目标复盘日期。`recorded_at` 是实际写入时间，含明确时区偏移，两者不得混淆。
+- `branch` / `base_commit` 只在能获取时填写；无 Git 或无提交时用 `null` 并说明；分离 HEAD 时 `branch` 为 `null`，仍可记录实际 HEAD commit，禁止编造。
+- `verification` 标明 `verified`、`unverified` 或 `pending`，正文保留验证证据。已确认 / 推断 / 未验证内容分开。
+- 原始归档没有来源时 `source_ids: []`；教训和汇总引用其实际来源 ID。旧文件没有 ID 时以项目相对路径及日期小节定位，标为 legacy，不修改旧文件补 ID。
+- `scope` 必须明确规则适用范围；不足时写 `unknown`，不得当成全项目生效。
+
+## 教训与规则采纳
+
+新教训按 Trigger / Wrong / Correction / Proposed Rule / Scope / Verification / Sources 写独立文件。`docs/ai-lessons.md` 是稳定入口和已采纳规则，不是每次都要追加的日志。归档、复盘和自检不得自动改写 `AGENTS.md`、`ai-lessons.md`、业务规范或共享索引。
+
+规则采纳必须经用户明确批准或团队正常 PR 审阅，保留来源和适用范围。未决矛盾不能直接写成生效规则。
+
+## 汇总合并
+
+仅整理汇总层，不去重删除或改写原始记录：
+
+1. 同义且同范围：汇总保留一个条目，合并全部来源 `record_id` 与作者。
+2. 不同但互补：都保留，不能因文本相似而丢掉事实。
+3. 不同范围：分别保留并注明范围，不能合并成全局规则。
+4. 同范围矛盾：标记 `pending`，列双方来源与验证状态，等待确认；禁止 last-write-wins。
+
+日复盘只读归档和教训源，不把 `docs/daily/` 中已有摘要当新来源，避免日报的日报。同一来源 ID 在一次汇总中只计一次。同一作者、目标日期、范围下再次汇总相同来源集合且没有新事实时复用已有结果，不无限生成重复日报；已有摘要可以只读核对来源，不能作为新增事实。不同人并行生成的摘要不互相覆盖，后续汇总仍按原始来源去重。
+
+## 兼容与授权
+
+沿用项目明确的旧归档目录、索引或单文件读取范围，无约定时读 `docs/archives/`。旧内容不搬移、不删除、不补写 ID；不为新记录自动追加共享索引。缺少资料明确说明，不全盘搜索，不扫描用户主目录。
+
+用户明确归档 / 复盘可授权对应记录写入；主动建议仍需确认。已有记录不覆盖；异常、冲突和权限边界须询问。该协议由宿主 agent 按需执行，没有后台监听、账号系统、同步服务或自动 Git 合并。
+
+`supersedes` 只声明纠正关系，不代表规则已获采纳。只有同范围且存在明确用户或团队采纳证据时，汇总才将旧条目标为已被替代并保留来源；未确认的冲突仍为 `pending`，不能按时间先后决定。`branch` / `base_commit` 只是来源，不证明分支已合入或结论已获团队确认。

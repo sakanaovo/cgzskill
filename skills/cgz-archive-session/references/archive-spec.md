@@ -134,10 +134,10 @@
 
 ## 更新还是新建
 
-- 同一主题当天继续推进：必须追加到已有归档。
-- 新主题、新结论组或新交接对象：新建归档。
-- 长期文档只接收稳定结论；临时讨论留在会话归档。
-- 修改已有归档时只追加新小节或补充状态，禁止重写历史让旧结论失踪。
+- 每次归档都新建独立记录，包括同一作者、同一主题当天继续推进。
+- 原始记录不可改写或删除；更正通过新记录的 `supersedes` 指向旧 ID。
+- 旧项目已有目录、索引或单文件仍可读取，不搬移、不重写；新记录写到其约定的独立文件目录。若旧约定只支持共享单文件，确认新增独立目录（默认 `docs/archives/`），禁止自动追加旧文件。
+- 长期文档只接收经明确采纳的稳定结论；归档动作不自动更新共享规则。
 
 ---
 
@@ -245,14 +245,36 @@ Run:
 
 ## 索引规范
 
-创建新归档文件时必须同步更新最接近的索引。没有索引时在同目录创建一个最小索引。
+不自动新增或追加共享索引。按目录、日期和记录元数据查找；旧索引只读兼容。用户另行要求整理索引时才生成可审查汇总，保留全部来源，不改写原始记录。
 
-索引只记录：
+---
 
-- 日期
-- 主题
-- 文件路径
-- 1 句摘要
-- 必要的下一步
+## 团队记录协议
 
-禁止删除历史记录。禁止为了索引复制全文。
+本 skill 可独立使用，不要求完整安装或先初始化。项目已有 `docs/cgz-memory.md` 时读取其约定；没有时使用本节最小协议，不读取主目录或无关仓库。
+
+1. 读取项目本地 `.cgz/local.json` 的 `author_id` / `author_alias`。缺失时先确认作者别名（`git user.name` 仅候选，不取 email），生成随机 UUID 作为 `author_id`；经确认创建身份并在项目 `.gitignore` 精确添加 `/.cgz/local.json`。无 Git 也可使用。不得写 Git 全局配置。已有身份原样保留；格式异常、忽略规则无效或文件已被 Git 跟踪时先报告并确认，禁止自动改历史。
+2. 每次新记录生成独立随机 UUID `record_id`；日期、作者别名、分支和时间戳都不是唯一性保证。用独占创建方式写 `YYYY-MM-DD-<record_id>.md`；目标已存在时重新生成 ID，禁止覆盖。一次已完成的写入重试先核对该 ID，不再新建重复记录。
+3. 文件头包含以下元数据，再接本 skill 的正文模板。`date` 是事实所属日期；`recorded_at` 是实际记录时间（ISO 8601，含时区）。作者只是来源标记，不是认证身份；不同机器的作者 ID 不自动合并。
+
+```yaml
+---
+record_id: "<random UUID>"
+author_id: "<local author UUID>"
+author_alias: "<confirmed alias>"
+date: "YYYY-MM-DD"
+recorded_at: "YYYY-MM-DDTHH:mm:ss+08:00"
+scope: "<project-relative path or explicit project scope>"
+verification: "unverified" # verified / unverified / pending; include evidence in body
+branch: null # current branch if available; detached HEAD uses null
+base_commit: null # current HEAD commit if available; never guess
+source_ids: [] # source IDs for summaries or corrections
+supersedes: [] # IDs corrected by a new record; originals remain
+---
+```
+
+4. 原始记录不可改写或去重删除；更正写新记录并填 `supersedes`。不得存密钥、令牌或不必要的个人信息，不自动存 email。新教训写 `docs/lessons/YYYY-MM-DD-<record_id>.md`，正文按 Trigger / Wrong / Correction / Proposed Rule / Scope / Verification / Sources 记录；规则是候选而非已生效。
+5. 汇总层：同义且同范围合并一条并保留全部来源 ID / 路径、作者、日期和验证状态；不同互补内容保留；范围不同则带范围保留；同范围矛盾标 `pending` 等待确认，不用最后写入覆盖。禁止将未验证或冲突内容提升为生效规则。
+6. 禁止每次记录都追加共享索引、`AGENTS.md` 或 `docs/ai-lessons.md`。目录按日期检索即可；后者是已采纳规则入口，只有明确采纳授权或团队正常 PR 审核后才改。这里是 agent 执行规则，不是后台监听、同步或自动 Git 合并服务。
+
+`supersedes` 只声明纠正关系，不代表规则已获采纳。只有同范围且存在明确用户或团队采纳证据时，汇总才将旧条目标为已被替代并保留来源；未确认的冲突仍为 `pending`，不能按时间先后决定。`branch` / `base_commit` 只是来源，不证明分支已合入或结论已获团队确认。

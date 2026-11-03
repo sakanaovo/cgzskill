@@ -1,4 +1,4 @@
 interface:
   display_name: "cgz Init"
-  short_description: "扫描并初始化项目里的 cgz 记忆架构，先询问再生成"
-  default_prompt: "扫描 AGENTS.md、docs/ai-lessons.md 和 docs/archives/ 是否存在，列出已有和缺失项，生成任何文件前先询问用户。"
+  short_description: "确认作者别名后初始化团队记忆骨架，保留已有身份与文件"
+  default_prompt: "扫描已有项目骨架，首次确认作者别名，初始化本地身份和独立记录目录；仅忽略 .cgz/local.json，保留已有文件，不修改业务代码或全局 Git 配置。"

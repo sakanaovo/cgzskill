@@ -1,60 +1,34 @@
 # AGENTS.md
 
-> 给所有 AI 编码 agent（Claude Code / Codex / 其他）的项目说明。本文件是项目记忆的「长期规则层」。
-
----
-
 ## cgz 记忆体系
 
-本项目使用 [cgz](https://github.com/sakanaovo/cgzskill) 这套「AI 项目记忆」架构。AI 不能自动学习，但可以在每次会话开始时读取项目记忆，表现得像「学会了」。
+团队记忆协议见 `docs/cgz-memory.md`。共享规则和本地作者身份分离；本地身份在忽略的 `.cgz/local.json`，不用于身份认证。
 
-### 五件事
+1. **读取**：只读当前任务相关材料，区分事实、推断和未验证点。
+2. **讨论**：先闭合当前问题，不主动扩题。
+3. **归档**：每次新建 `docs/archives/YYYY-MM-DD-<record_id>.md`，不追加共享索引。
+4. **教训**：新候选写 `docs/lessons/YYYY-MM-DD-<record_id>.md`；`docs/ai-lessons.md` 只作稳定入口和已采纳规则。
+5. **复盘**：写 `docs/daily/YYYY-MM-DD-<record_id>.md`，按原始来源 ID 汇总，不递归读取日报当新事实。
 
-1. **读取** —— `cgz-focused-reading` skill 保证只读相关内容，不发散。
-2. **讨论** —— `cgz-focused-discussion` skill 保证单线收敛，不一问就甩 ABCD。
-3. **归档** —— `cgz-archive-session` skill 把事实和下一步写进 `docs/archives/`。
-4. **教训** —— `docs/ai-lessons.md` 记录错误 → 纠正 → 规则，下次启动读取。
-5. **复盘** —— `cgz-daily-recap` skill 按天聚合当日归档与教训，写到 Obsidian vault 的 `Daily/YYYY-MM-DD.md`。
+## 6 步教训循环
 
----
+1. 记录触发场景。
+2. 记录错误行为。
+3. 保留用户纠正及来源。
+4. 提炼候选规则，标明适用范围和验证状态。
+5. 经用户明确批准或团队 PR 采纳后，才更新长期规则；不得自行把候选写成生效规则。
+6. 下次读取已采纳规则和任务相关候选，不全量载入历史。
 
-## cgz 配置
-
-- **Obsidian vault**: `{{OBSIDIAN_VAULT}}`
-  - `cgz-daily-recap` 写到此目录下的 `Daily/YYYY-MM-DD.md`
-  - 留空表示禁用每日复盘
-  - cgz-init 会在初始化时询问填入
-
-### 6 步教训循环
-
-每次 AI 出错 / 跑偏 / 返工后，**必须**按以下 6 步写入 `docs/ai-lessons.md`：
-
-1. **触发场景** —— 用户当时在问什么、做什么。
-2. **错误行为** —— AI 实际给出的回复 / 动作。
-3. **用户纠正** —— 用户的反驳或更正原话。
-4. **提炼规则** —— 一句话写出未来该怎么做。
-5. **生效位置** —— 规则写进 `AGENTS.md`（长期）/ 本文件项目规则段 / 某个具体 skill。
-6. **下次启动读取** —— 新会话开始时，agent 必须先读本文件 + `docs/ai-lessons.md`。
-
-格式样例见 `docs/ai-lessons.md` 顶部的「How to log」段。
-
----
+候选教训按 `docs/ai-lessons.md` 的格式写独立记录，不自动追加此文件或 `AGENTS.md`。同义同范围合并来源，不同内容保留，同范围矛盾标 `pending`；原始记录不改写、不删除。
 
 ## 项目专属规则
 
-<!-- 在此追加项目特定规则。删除以下示例占位 -->
-
-- TBD —— 删掉这行，写你这个项目里 AI 必须遵守的规则。
-
----
+<!-- 仅放团队已确认规则；初始化不预填偏好或业务规则。 -->
 
 ## 启动复用顺序
 
-新会话开始时，agent 必须按顺序读取：
+1. 本文件和已有 `CLAUDE.md`。
+2. `docs/cgz-memory.md` 和 `docs/ai-lessons.md`。
+3. 当前任务相关的归档和教训记录。
 
-1. 本文件（`AGENTS.md`）—— 长期规则
-2. `CLAUDE.md`（如果存在）—— Claude Code 专属注解
-3. `docs/ai-lessons.md` —— 历史教训
-4. 任务相关的 `docs/archives/*.md` —— 上一轮上下文
-
-只读和当前任务相关的归档；禁止把所有历史都拉进上下文。
+禁止扫描用户主目录、自动更新共享索引、自动提交或合并。该流程没有后台监听或同步服务。

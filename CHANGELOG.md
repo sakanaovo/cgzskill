@@ -12,6 +12,23 @@
 
 ### Changed
 
+- 初始化一次确认作者别名，建立精确忽略的本地身份和共享记忆协议；无 Git 也能使用，旧身份和记录保留。
+- 归档、候选教训、复盘改为随机 UUID 独立记录，不再自动追加共享索引或规则；汇总保留来源、同范围矛盾待确认，重复来源不重复计数。
+- 团队协议为说明型 skill 执行约束，不声称提供后台监听、同步或自动合并。
+
+### Fixed
+
+- 移除核心流程对 Obsidian 的集成要求：初始化不问 vault，日复盘写项目 `docs/daily/YYYY-MM-DD-<record_id>.md`，使用普通 Markdown。
+- 旧项目配置保留但不再使用；保留写入确认和不覆盖规则，明确 Obsidian 接入尚未实测。
+- 日复盘统一按目标日期筛选和命名，修正补昨天时仍被要求只读今天归档的冲突；沿用项目明确的归档目录、索引或单文件，避免遗漏合法归档。
+
+- 校验脚本只把独立一行的 `---` 识别为 frontmatter 边界，避免误切描述里的连字符。
+- 版本脚本先验证并生成变更日志，再写入版本清单，避免缺失 `[Unreleased]` 标题时只更新版本。
+- 移除只拼接 `SKILL.md` 到 `AGENTS.md` 的不完整安装示例，要求保留规范和模板引用。
+- 为上述边界条件补充回归测试，并接入 CI。
+
+### Changed
+
 - 四个未加前缀的 skill 重命名为 `cgz-*`：`cgz-focused-discussion` / `cgz-archive-session` / `cgz-focused-reading` / `cgz-daily-recap`；同步更新 marketplace plugin name、skill 路径、文档示例和内部引用。
 - 五个 `SKILL.md` frontmatter `description` 改为中文触发描述，并同步 `agents/openai.yaml` 展示名与提示语。
 - 新增 `cgz-all` bundle plugin，一次安装 5 个 cgz skill，单独安装入口保留。

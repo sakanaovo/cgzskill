@@ -197,10 +197,10 @@ def cmd_bump(args: argparse.Namespace) -> None:
     if semver_lt(data["metadata"]["version"], target_marketplace):
         data["metadata"]["version"] = target_marketplace
 
-    save_marketplace(data)
-
     bullet = f"- **{args.plugin}** `{old_version} → {new_version}` ({args.kind}) — {args.note}"
+    # Validate and prepare both documents before writing either one.
     new_changelog = append_unreleased_bullet(changelog, bullet)
+    save_marketplace(data)
     CHANGELOG.write_text(new_changelog, encoding="utf-8")
 
     print(f"Bumped {args.plugin}: {old_version} → {new_version} ({args.kind})")

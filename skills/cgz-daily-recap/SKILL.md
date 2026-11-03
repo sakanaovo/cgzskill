@@ -1,23 +1,23 @@
 ---
 name: cgz-daily-recap
-description: "根据当天归档、教训日志和当前会话生成 Obsidian 友好的每日复盘 Markdown（YAML frontmatter + [[wikilinks]]）。用户说今天复盘、收尾今天、每日复盘、日报，或新一天发现昨天有未复盘归档时使用；写入 AGENTS.md 配置的 obsidian_vault。"
+description: "根据当天归档、教训日志和当前会话生成项目内的每日复盘 Markdown。用户说今天复盘、收尾今天、每日复盘、日报，或新一天发现昨天有未复盘归档时使用；写入项目 docs/daily/YYYY-MM-DD-<record_id>.md，不依赖外部应用或初始化配置。"
 ---
 
 # 每日复盘
 
-按天聚合当日上下文，写一份 Obsidian 友好的 `Daily/YYYY-MM-DD.md`。
+按天聚合当日上下文，写一份项目内的 `docs/daily/YYYY-MM-DD-<record_id>.md`，使用普通 Markdown。
 
-跟 `cgz-archive-session` 的区别：cgz-archive-session 是**单次**会话归档（每发生一次写一份），cgz-daily-recap 是**按天**聚合（每天一份，串当天所有归档）。
+跟 `cgz-archive-session` 的区别：cgz-archive-session 是**单次**会话归档（每发生一次写一份），cgz-daily-recap 是**按天**聚合（不同作者或来源集合生成独立摘要，同源无新事实时复用）。
 
 ## 入口与依据
 
 判定依据全部写在 [复盘规范](references/recap-spec.md)。该文件分五大节：
 
-1. **五原则** —— 只写当天事实、不重新分析、不补方案、跨会话只读落地文件、用户未确认不写。
+1. **五原则** —— 只写目标日期事实、不重新分析、不补方案、跨会话只读落地文件、用户未确认不写。
 2. **五维度** —— 写入前自检：触发 / 数据源 / 输出位置 / 链接合法 / 语言。
 3. **五心理学** —— 失败模式：重复分析 / 完整性焦虑 / 过度拼凑 / 链接编造 / 时间错乱。
 4. **对话严苛规则** —— 句式、单一询问句、12 行收尾。
-5. **语言纯化规则** —— 中文段落不夹裸英文，YAML 字段 / wikilink / 英文 section 名保留原文。
+5. **语言纯化规则** —— 中文段落不夹裸英文，文件路径和 Markdown 语法保留原文。
 
 写复盘前必须读取该规范。
 
@@ -30,53 +30,38 @@ description: "根据当天归档、教训日志和当前会话生成 Obsidian �
 
 自检触发（agent 主动建议，仍需用户确认）：
 
-- 当天首次启动，检测到 `docs/archives/` 里有昨天的归档但 vault 里没有对应日期的 Daily note。
+- 当天首次启动，检测到项目约定的归档位置（默认 `docs/archives/`）里有昨天的归档但 `docs/daily/` 里没有对应日期的日复盘；补昨天时明确使用昨天日期，禁止混入今天。
 - 当前会话已经写过多份归档，但还没有按天聚合。
 
 主动建议句式：
 
 ```text
-今天已经有 N 份归档落地，还没写日复盘。要现在生成 Daily/YYYY-MM-DD.md 吗？
+今天已经有 N 份归档落地，还没写日复盘。要现在生成 docs/daily/YYYY-MM-DD-<record_id>.md 吗？
 ```
 
-## 前置条件
+## 输出位置与确认
 
-`AGENTS.md` 里必须有 cgz 配置段，含 `obsidian_vault` 路径：
+目标固定为项目 `docs/daily/YYYY-MM-DD-<record_id>.md`，不要求先运行 `cgz-init`，也不要求 `AGENTS.md` 或外部应用配置。用户明确要求复盘即授权创建该独立记录；主动建议必须确认。`record_id` 使用随机 UUID，独占创建，禁止覆盖已有记录。
 
-```text
-## cgz 配置
-
-- Obsidian vault: `~/Obsidian/cgz`（cgz-daily-recap 写到此目录下的 `Daily/YYYY-MM-DD.md`）
-```
-
-未配置时不写文件，直接提示：
-
-```text
-AGENTS.md 缺 cgz 配置段（obsidian_vault）。先跑 /cgz-init 补上，再回来跑 cgz-daily-recap。
-```
+已有 `AGENTS.md` 中的旧 Obsidian 配置保留不动，本轮不读取或使用；不向旧 vault 写入。用户曾明确禁用日复盘时，不自动恢复，先确认是否重新启用。
 
 ## 数据源（只读落地文件，禁止凭记忆）
 
-按顺序读：
+先确定唯一的**目标复盘日期**：默认今天；用户确认补昨天或指定其他日期时，使用该日期。明确为绝对日期 `YYYY-MM-DD`，数据筛选、文件名、标题和收尾路径必须一致。日期有歧义时先问，禁止混写其他日期。
 
-1. `docs/archives/` 里日期匹配今天的文件
-2. `docs/ai-lessons.md` 当天追加的条目
-3. 当前会话上下文（仅用于补充未落盘的当下决策）
+按顺序读；缺失的归档或教训日志跳过并说明，不要求先初始化。只有当前会话时，只收录可核实的目标日期事实：
+
+1. 项目明确约定的归档目录、索引或单文件中属于目标日期的记录；无约定时使用 `docs/archives/`。只在已确认的归档范围内读取，禁止全盘搜索；缺资料时明示无资料
+2. 独立 `docs/lessons/` 中目标日期的教训，兼容旧 `docs/ai-lessons.md` 的带日期条目；保留候选 / 已采纳 / pending 状态
+3. 当前会话上下文（仅用于补充未落盘且可核实发生在目标日期的决策）
 
 跨会话信息**只能**从前两项读，禁止假设 agent 记得早些会话里说过的话。
 
 ## 输出格式
 
-写入 `${obsidian_vault}/Daily/YYYY-MM-DD.md`：
+写入项目 `docs/daily/YYYY-MM-DD-<record_id>.md`：
 
 ```markdown
----
-date: YYYY-MM-DD
-tags: [daily, recap, cgz]
-related:
-  - "[[YYYY-MM-DD-yesterday]]"
----
-
 # YYYY-MM-DD
 
 ## 主要决策
@@ -85,12 +70,12 @@ related:
 
 ## 改过的文件
 
-- [[path/to/file]]
+- `path/to/file`（核实存在后生成相对于本复盘文件的 Markdown 链接）
 - ……
 
 ## 新增 lessons
 
-- ……（docs/ai-lessons.md 当天追加的条目摘要，禁止改写规则原文）
+- ……（目标日期的独立候选教训或旧教训条目摘要，禁止改写规则原文）
 
 ## 未决问题
 
@@ -98,16 +83,18 @@ related:
 
 ## 明天先看
 
-- [[next-archive]]
+- `path/to/next-archive`（只列已存在文件）
 - ……
 ```
 
 字段约束：
 
-- `date` 必须是绝对日期 `YYYY-MM-DD`。
-- `related` 的 wikilink 只能指向 vault 里**已存在**的 daily note，禁止编未来文件。
-- 「改过的文件」列项目相对路径，用 wikilink 包裹（Obsidian 自动解析）。
-- 「新增 lessons」只摘要、不重写；详细规则原文留在 `docs/ai-lessons.md`。
+- 文件名和标题使用绝对日期 `YYYY-MM-DD`。
+- 普通 Markdown 链接从 `docs/daily/` 计算到已存在的目标文件；例如教训日志存在时使用 `[教训日志](../ai-lessons.md)`。
+- 「改过的文件」保留项目相对路径；目标缺失或不能可靠链接时使用路径文本，禁止伪造链接。
+- 「新增 lessons」只摘要、不重写；原始教训留在 `docs/lessons/` 或旧来源，`docs/ai-lessons.md` 保留为已采纳规则入口。
+- 按本 skill 规范记录来源 ID、作者、日期与时区、范围和验证状态；可获取时才填分支与基线 commit。
+- 同义且同范围合并来源，互补差异保留，同范围矛盾标 `pending`。只汇总归档与教训，不递归汇总日报；同一作者相同来源集合且无新事实时复用已有摘要，不重复计数。
 
 ## 收尾回复
 
@@ -117,7 +104,7 @@ related:
 日复盘已写。
 
 文件：
-- ${obsidian_vault}/Daily/YYYY-MM-DD.md
+- docs/daily/YYYY-MM-DD-<record_id>.md
 
 收录：
 - 归档 N 份
@@ -125,16 +112,16 @@ related:
 - 未决问题 K 条
 
 下一步：
-- 在 Obsidian 里打开核对，必要时手改
+- 打开该文件核对，必要时手改
 ```
 
 禁止在收尾里展开新分析、补建议、给明天的方案。
 
 ## 禁止
 
-- 禁止在 vault 外写文件。
-- 禁止覆盖已存在的 Daily note（已存在时询问：覆盖 / 追加 / 取消）。
+- 复盘记录只写项目 `docs/daily/`；缺本地身份时，经明确确认的身份引导可单独创建 `.cgz/local.json` 并精确更新 `.gitignore`，不得因此改写其他文件。
+- 禁止覆盖或追加已有日复盘，更正写新记录并引用旧 ID。
 - 禁止从记忆里编归档内容，所有事实必须来自落地文件。
-- 禁止编 wikilink 指向不存在的文件。
-- 禁止把当天没发生的事写进复盘。
+- 禁止生成指向不存在文件的链接。
+- 禁止把目标日期没发生的事写进复盘。
 - 禁止把 `cgz-archive-session` 已经写过的细节重抄一遍，复盘是索引不是重复。
