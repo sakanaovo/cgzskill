@@ -1,4 +1,5 @@
 {
   "author_alias": "{{AUTHOR_ALIAS}}",
-  "author_id": "{{AUTHOR_ID}}"
+  "author_id": "{{AUTHOR_ID}}",
+  "document_language": "{{DOCUMENT_LANGUAGE}}"
 }

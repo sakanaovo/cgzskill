@@ -37,7 +37,8 @@ def record_schema(path):
 class TeamContractTests(unittest.TestCase):
     def test_identity_template_is_json_with_only_local_identity_fields(self):
         data = json.loads(read(f"{INIT}/assets/local.json.template"))
-        self.assertEqual(set(data), {"author_alias", "author_id"})
+        self.assertEqual(set(data), {"author_alias", "author_id", "document_language"})
+        self.assertEqual(data["document_language"], "{{DOCUMENT_LANGUAGE}}")
         self.assertEqual(data["author_alias"], "{{AUTHOR_ALIAS}}")
         self.assertEqual(data["author_id"], "{{AUTHOR_ID}}")
 
@@ -63,7 +64,7 @@ class TeamContractTests(unittest.TestCase):
 
     def test_record_metadata_matches_across_shared_and_standalone_contracts(self):
         expected = {
-            "record_id", "author_id", "author_alias", "date", "recorded_at",
+            "record_id", "author_id", "author_alias", "document_language", "date", "recorded_at",
             "scope", "verification", "branch", "base_commit", "source_ids", "supersedes",
         }
         for path in (

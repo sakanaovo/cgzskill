@@ -1,6 +1,10 @@
+<!-- 模板渲染提示：生成时删除本提示；将标题、段落和说明写成项目 project_document_language 指定的语言。路径、元数据字段、ID、状态值及来源原文保持不变。 -->
+
 # 已采纳教训与稳定入口
 
 本文件只保存经明确批准或团队 PR 采纳的规则。新教训写 `docs/lessons/YYYY-MM-DD-<record_id>.md`，不得每次自动在本文件顶部插入日志。
+
+本文件和之后经批准采纳的规则遵守 `docs/cgz-memory.md` 中的 `project_document_language` 或已有项目语言约定，不随个人 `document_language` 切换。个人新候选按本次明确要求 > 本地 `document_language` > 项目约定 > 首次询问选择语言。采纳时保留来源原文，译文另列并标明；不为切换语言改写任何原始记录。
 
 ## 新教训格式
 

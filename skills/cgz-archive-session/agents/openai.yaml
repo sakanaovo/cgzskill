@@ -1,4 +1,4 @@
 interface:
   display_name: "cgz Archive Session"
   short_description: "把长会话、跑偏讨论或交接上下文归档成项目事实记录"
-  default_prompt: "把当前会话归档成带独立随机 record_id 和作者来源的简洁项目记录，只保留事实、路径、决策、未验证点和下一步，不新增分析，不自动追加共享索引或规则文件。"
+  default_prompt: "把当前会话归档成带独立随机 record_id 和作者来源的简洁项目记录，只保留事实、路径、决策、未验证点和下一步，不新增分析，不自动追加共享索引或规则文件。 生成新文档时遵循已确认的 document_language，共享文件遵循项目语言；保留路径、字段与来源原文。"

@@ -1,75 +1,68 @@
-# cgzskill：面向 AI 助手与编程工具的项目记忆技能
+# cgzskill: Project memory for AI assistants and coding tools
 
-[English](README.en.md) · [更新记录](CHANGELOG.md) · [贡献指南](CONTRIBUTING.md) · [团队验收清单](docs/team-acceptance.md)
+English · [简体中文](README.zh-CN.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Team acceptance checklist](docs/team-acceptance.md)
 
-**让 AI 阅读和讨论更聚焦，让会话归档、团队交接和每日复盘有据可查。**
+**Focused reading, focused discussion, and file-based project memory for AI assistants and coding tools that support Agent Skills.**
 
-cgzskill 是一套以中文工作流为主、面向支持 [Agent Skills](https://agentskills.io/specification) 的 AI 助手与编程工具的项目记忆技能。包含 5 个独立技能；Claude Code marketplace 另提供全套安装包 `cgz-all`。下方以 Claude Code 和 Codex 演示安装，不限定适用宿主；其他工具须按其技能规范适配，未逐一实测。
+cgzskill packages five reusable AI workflows: initialize project memory, keep a conversation on topic, read only what answers the question, archive a session for handoff, and produce a daily recap. Claude Code and Codex are installation examples, not the only intended hosts. The Claude Code marketplace offers the full `cgz-all` bundle or individual skills; other hosts require adaptation to their own skill specifications and have not all been tested.
 
-**版本：2.0.0。** 项目记忆保存在可审查的 Markdown 文件中。团队成员各自写独立记录，再按来源汇总，减少多人争写同一个日志或索引的机会。它不是模型自动学习、账号系统或自动 Git 合并服务。
+This update prepares **2.1.0**, adding a saved document-language preference: choose Simplified Chinese (`zh-CN`), English (`en`), or another explicitly named language during initialization. Skills follow the [Agent Skills specification](https://agentskills.io/specification). Their instructions and reference documents remain primarily in Chinese; generated document prose follows the language rules below, rather than the language of those instructions. This is configurable output, not a claim that every language or host has been tested.
 
-## 五个 skill 分别做什么
+## Ask your AI to install it
 
-| Skill | 解决的问题 | 你可以这样说 | 输出或行为 |
-| --- | --- | --- | --- |
-| [`cgz-focused-reading`](skills/cgz-focused-reading/SKILL.md) | 读文档、代码、PR 或日志时容易扩题 | “读这个 PR，只说风险” | 只回答当前问题，区分事实、推断和未验证点 |
-| [`cgz-focused-discussion`](skills/cgz-focused-discussion/SKILL.md) | 讨论发散，没问就给多套方案 | “先聚焦这个问题” | 闭合当前议题，不擅自扩展方案、工时和优先级 |
-| [`cgz-archive-session`](skills/cgz-archive-session/SKILL.md) | 长会话或交接丢上下文，多人追加同一日志 | “把这轮归档，给下一位接手” | 带作者、范围、验证状态和来源的独立会话记录 |
-| [`cgz-init`](skills/cgz-init/SKILL.md) | 每个项目都要手动搭记忆目录 | “初始化 cgz，作者别名用 alice” | 一次补齐本地身份与共享协议，保留已有文件 |
-| [`cgz-daily-recap`](skills/cgz-daily-recap/SKILL.md) | 一天多份归档难以回看，重复内容混在一起 | “复盘今天”或“补昨天的复盘” | 按目标日期聚合事实，按来源去重，冲突保留为待确认 |
-
-阅读和讨论可直接单独使用。归档、复盘也包含独立使用的最小协议；团队项目用 `cgz-init` 建立统一入口更方便。主动建议写入仍须确认，用户明确要求初始化或归档时按对应 skill 的授权范围执行。
-
-## 让 AI 帮你安装
-
-把下面这段发给有本地项目访问能力的 AI 编程助手。安装来源是仓库当前 `main`，不要假设存在 `v2.0.0` tag：
+Copy this prompt into an agent with access to your development environment. It installs the current `main`; the language feature requires a revision containing the 2.1.0 changes.
 
 ```text
-请帮我安装 https://github.com/sakanaovo/cgzskill 当前 main 的技能。先读 README，识别我正在使用的 AI 助手或编程工具，核对其是否支持 Agent Skills，并确认项目级或用户级等宿主支持的安装范围；Claude Code 和 Codex 可参考文中示例，其他宿主按其官方规范处理，不猜路径或命令。按宿主说明安装完整目录（含 references 和 assets），已有同名技能先核对，不覆盖或重复安装。安装后用宿主实际显示的入口引导 cgz-init，保留原项目文件和已有身份。分别核验“宿主已加载技能”和“初始化已完成”，不要把复制成功当作加载成功；没有本地访问权限就给我操作步骤。不要关闭安全限制、运行未经审查的代码或提交凭据。
+Install cgzskill from the current main branch of https://github.com/sakanaovo/cgzskill. Verify the checked-out revision and its available features before claiming the new language configuration is supported. Read its README, identify my AI assistant or coding tool, check whether it supports Agent Skills, and confirm the supported installation scope, such as project-level or user-level, with me. Use the documented examples for Claude Code or Codex; for other hosts, follow their official specifications without guessing paths or commands. Use the supported installation method and preserve complete skill directories, including references and assets; do not overwrite existing files or install duplicate skills. Invoke cgz-init through the host's actual skill entry, confirm my author alias if needed, and ask which language I want for future documents: Simplified Chinese (zh-CN), English (en), or another language I name explicitly. Save that preference as document_language in .cgz/local.json while preserving any existing author alias and UUID. Keep the project's shared-file language separate; if there is no established convention, confirm it once during initialization. Preserve existing project files and identity. Verify separately that the host loaded the skills and that initialization succeeded. If you lack local access, give me the steps instead of claiming completion. Do not bypass safety controls, run unreviewed code, or request credentials.
 ```
 
-也可按下面的命令自行安装。
+## What it helps with
 
-## 安装示例一：Claude Code
+- **Keep context between sessions:** save confirmed decisions, relevant files, unresolved questions, and the next place to start in project Markdown.
+- **Make reading and discussion more focused:** answer the current question without turning a code review, log inspection, or product discussion into an unsolicited implementation plan.
+- **Prepare a team handoff:** preserve authors, sources, scope, and verification status so another person or agent can pick up the work.
+- **Close the day:** summarize that day's archives and lessons without repeating the analysis or requiring an external notes app.
 
-在 **Claude Code 会话里**输入，不是在系统 shell 中执行：
+Project memory comes from an agent reading these files in a later session. The skills do not train the model or provide automatic self-learning.
+
+## The five skills
+
+The commands below assume the `cgz-all` bundle is installed in Claude Code.
+
+| Skill | Use it when | Bundle command |
+| --- | --- | --- |
+| `cgz-init` | Set up missing project memory files, a local author identity, and a document-language preference without overwriting existing content. | `/cgz-all:cgz-init` |
+| `cgz-focused-reading` | Read documentation, source code, pull requests, logs, screenshots, or long context to answer one question. | `/cgz-all:cgz-focused-reading` |
+| `cgz-focused-discussion` | Keep a discussion on its current decision and avoid unsolicited options or new topics. | `/cgz-all:cgz-focused-discussion` |
+| `cgz-archive-session` | Save one session's facts, decisions, and open questions for the next session or a team handoff. | `/cgz-all:cgz-archive-session` |
+| `cgz-daily-recap` | Aggregate one day's saved records and verifiable current-session context into a project-local recap. | `/cgz-all:cgz-daily-recap` |
+
+Reading and discussion work without initialization. Archive and recap also include a minimal identity and record protocol when the project has not been initialized.
+
+## Install
+
+### Example: Claude Code marketplace
+
+Run these commands inside Claude Code, then follow the installation prompts:
 
 ```text
 /plugin marketplace add sakanaovo/cgzskill
 /plugin install cgz-all@cgzskill
 ```
 
-在需要记忆的项目中调用：
+To install just one skill instead:
 
 ```text
-/cgz-all:cgz-init
+/plugin install cgz-focused-reading@cgzskill
 ```
 
-首次确认一个作者别名即可；也可以直接说明“作者别名用 alice”。Git 显示名仅作候选，不取邮箱。初始化会展示已有与缺失项，只补齐授权骨架，不覆盖旧身份或项目规则。
+Plugin commands use `/<plugin>:<skill>`. The individual reading plugin therefore exposes `/cgz-focused-reading:cgz-focused-reading`; the individual init plugin exposes `/cgz-init:cgz-init`. Type `/` to check the commands available in your session. See the official [Claude Code installation guide](https://code.claude.com/docs/en/discover-plugins).
 
-随后按需使用：
+Choose the bundle or the individual plugins you need; installing both creates redundant copies of the same skills.
 
-```text
-/cgz-all:cgz-focused-reading
-/cgz-all:cgz-focused-discussion
-/cgz-all:cgz-archive-session
-/cgz-all:cgz-daily-recap
-```
+### Example: Codex and standalone skills
 
-只装一个技能时，例如：
-
-```text
-/plugin install cgz-archive-session@cgzskill
-/cgz-archive-session:cgz-archive-session
-```
-
-Claude Code 插件命令使用 `/插件名:技能名`，详见[官方插件说明](https://code.claude.com/docs/en/plugins)。不要同时安装全套包和重复的单项包，避免出现重复技能入口。实际可用命令以宿主的技能列表为准。
-
-## 安装示例二：Codex 与其他方式
-
-### Codex：复制完整目录
-
-在终端执行下面的首次安装示例。已有同名目录时先检查本地改动，不盲目覆盖：
+Clone this repository, then copy **complete skill directories**, including `SKILL.md`, `references/`, `agents/`, and any `assets/`:
 
 ```bash
 git clone https://github.com/sakanaovo/cgzskill.git
@@ -78,104 +71,94 @@ mkdir -p ~/.agents/skills
 cp -Rn skills/cgz-* ~/.agents/skills/
 ```
 
-在目标项目里通过 `/skills` 选择技能，或输入 `$cgz-init`。团队也可将选定的完整目录放到项目 `.agents/skills/`，但不要重复安装同名技能。目录与调用方式见 [Codex 官方技能说明](https://developers.openai.com/codex/skills/)。
+This is a fresh-install example. `-n` preserves existing files; it does not upgrade an existing installation. Review and back up an installed directory before deliberately replacing it with a new version.
 
-### Claude Code：本地开发或独立 skill
+Codex supports user-level `~/.agents/skills/` and project-level `.agents/skills/`. Use `/skills` to find a skill or mention it explicitly, for example `$cgz-init`. See the official [Codex skills guide](https://developers.openai.com/codex/skills/).
 
-```bash
-# 在包含该仓库的父目录启动本地插件开发模式
-claude --plugin-dir ./cgzskill
-```
+For standalone Claude Code skills, use `~/.claude/skills/` or the project's `.claude/skills/` instead. Other Agent Skills hosts may need their own loading configuration. Do not paste only `SKILL.md` into `AGENTS.md`: that omits the referenced rules and templates. Follow each host's official directory and invocation rules. Supporting the skill format does not by itself establish compatibility; host-specific behavior still needs validation in the environment you use.
 
-不走 marketplace 时，将所需完整 skill 目录复制到 `~/.claude/skills/` 或目标项目 `.claude/skills/`。这种安装方式的命令没有插件命名空间；以宿主显示的名称为准。
+## First project: initialize, work, archive, recap
 
-其他宿主需要**保留完整 skill 目录**，包括 `SKILL.md`、`references/` 和已有 `assets/`，再按其说明适配入口。只拼接 `SKILL.md` 到项目说明会丢失引用。其他宿主的目录、调用入口和能力以其官方说明为准；本仓库未逐一验证，不能由遵循技能规范推定已兼容。
+1. Open your project in the host and invoke `cgz-init`. On first use, confirm an author alias and a document language: `zh-CN`, `en`, or another language you explicitly name. A Git username is only a suggested alias; Git and an email address are not required. If shared project files have no established language, confirm their language separately during initialization.
+2. Use focused reading or discussion for the work in front of you. For example: “Read this PR and explain the cause of the failing test. Stay within that question.”
+3. Invoke `cgz-archive-session` when you finish a useful unit of work: “Archive this session for the next person, keeping confirmed decisions and unresolved questions.”
+4. Invoke `cgz-daily-recap` at the end of the day: “Create today's recap from the project's saved records.”
 
-## 初始化后，项目里有什么
+An explicit archive or recap request authorizes that record. If the agent merely notices that an archive or recap would help, it must ask before writing one.
+
+Initialization fills in missing parts of this structure and preserves existing files:
 
 ```text
-项目根/
-├── .cgz/local.json        # 本工作副本身份，精确忽略 /.cgz/local.json
-├── .gitignore            # 仅补所需的身份忽略项
-├── AGENTS.md             # 共享入口，已有规则保留
+your-project/
+├── .cgz/local.json       # Local author identity and document_language; Git-ignored
+├── AGENTS.md            # Shared entry point for project instructions
 └── docs/
-    ├── cgz-memory.md     # 团队记录协议
-    ├── ai-lessons.md     # 已采纳规则与稳定入口
-    ├── archives/         # 独立会话归档
-    ├── lessons/          # 独立候选教训
-    └── daily/            # 独立日复盘
+    ├── cgz-memory.md    # Shared record protocol
+    ├── ai-lessons.md    # Stable, accepted rules
+    ├── archives/       # Session records
+    ├── lessons/        # Candidate lessons, pending review
+    └── daily/          # Daily recaps
 ```
 
-每份记录的路径为：
+The only added ignore pattern is `/.cgz/local.json`. Initialization stays within the listed project files; it does not scan your home directory, edit application code, change global Git settings, or store secrets.
 
-- `docs/archives/YYYY-MM-DD-<record_id>.md`
-- `docs/lessons/YYYY-MM-DD-<record_id>.md`
-- `docs/daily/YYYY-MM-DD-<record_id>.md`
+## Choose your document language
 
-`author_id` 是工作副本本地生成的随机 UUID，用于追溯来源，不证明现实身份。每份新记录另有随机 `record_id`；同人多会话也不用作者名或日期充当唯一标识。无 Git 仍可使用，分支和基线 commit 无法获取时不编造。
+Initialization records your explicit choice in `.cgz/local.json` as `document_language`. Use `zh-CN` for Simplified Chinese, `en` for English, or a clear language name or tag for another language, such as `日本語` or `ja`. “Other” is a prompt to name a language, not a language value to save.
 
-以下是记录元数据的示意，ID 不能直接复制用于新记录：
+For new personal records, such as session archives, candidate lessons, and daily recaps, resolve the language in this order:
 
-```yaml
-record_id: "<每份记录新生成的 UUID>"
-author_id: "<本地随机作者 UUID>"
-author_alias: "alice"
-date: "2026-11-03"
-recorded_at: "2026-11-03T10:00:00+08:00"
-scope: "src/auth/"
-verification: "unverified"
-branch: null
-base_commit: null
-source_ids: []
-supersedes: []
-```
+1. An explicit language instruction in the current request.
+2. Your saved `document_language` in `.cgz/local.json`.
+3. An established project document-language convention.
+4. If none exists, ask before creating the first document.
 
-## 两个人同时使用时怎么处理
+Do not infer a preference from your operating system locale, account, location, Git identity, or the language of a single message. “Write this recap in English” applies to that recap only. “Use English for my documents from now on” updates the saved preference. If the request does not make the scope clear, ask whether it is a one-time choice or a lasting preference before changing the setting.
 
-- **写入分开**：独立文件、独占创建，不自动追加共享索引、`AGENTS.md` 或 `docs/ai-lessons.md`。已有身份被 Git 跟踪时先警告，不自动删除或改历史。
-- **原始记录保留**：更正写新记录并引用旧 ID，不改写或去重删除原文件。
-- **汇总有规则**：同义且同范围合并来源；互补差异保留；不同范围分别标注；同范围矛盾标 `pending`，等待确认。
-- **规则需采纳**：新的 lesson 是候选。经明确批准或团队 PR 审阅后才更新稳定规则，不能按最后写入时间决定谁正确。
-- **复盘不递归**：只聚合归档、教训和可核实的会话事实，不把旧日报当新来源。同一作者、日期、范围和来源集合没有新事实时复用已有摘要。
+**Shared files follow the project, not an individual preference.** `AGENTS.md`, `docs/cgz-memory.md`, and `docs/ai-lessons.md` retain the project's established language. If none exists, initialization confirms the shared-file language once and records that convention in the shared protocol. A personal preference does not silently change it.
 
-完整说明见[项目记忆架构](docs/ai-self-evolution-architecture.md)。这些规则减少共享文件冲突的来源，不保证 agent 永不犯错，也不替代 Git review。
+Adding a language preference to an existing installation keeps the existing `author_alias` and `author_id`; it must not create a new identity. The preference applies to future prose only. Do not translate or rewrite historical records, accepted rules, or source quotations. Keep paths, filenames, commands, metadata field names, UUIDs, source IDs, and schema values such as `pending` and `unverified` unchanged. Existing shared rules still require their usual explicit approval or team review to change.
 
-## 从 1.x 升级到 2.0
+## How team records work
 
-这是包含不兼容变化的主版本升级：
+- **Local identity:** each working copy has its own random `author_id` and author alias. These label sources; they do not authenticate a person or grant permissions.
+- **Independent records:** archives, candidate lessons, and recaps use `docs/archives/YYYY-MM-DD-<record_id>.md`, `docs/lessons/YYYY-MM-DD-<record_id>.md`, and `docs/daily/YYYY-MM-DD-<record_id>.md`, with a new random UUID for each new record. Dates, author names, and branches are not uniqueness guarantees.
+- **Traceable facts:** records retain authors, source IDs, dates and time zones, scope, verification status, and branch or baseline commit when available.
+- **Preserved history:** original records are not rewritten or deleted to deduplicate them. A correction is a new record that refers to the old ID.
+- **Stable shared rules:** routine writes do not append to a shared index, `AGENTS.md`, or `docs/ai-lessons.md`. Promoting a candidate lesson into an accepted rule requires explicit confirmation or team review through a PR.
+- **Careful summaries:** equivalent facts in the same scope can be combined with all sources retained. Complementary facts stay distinct; conflicts in the same scope remain `pending`. Repeated sources are not counted twice, and daily recaps are not recursively treated as new evidence. Reuse also requires the same actual output language, saved as `document_language` in each new record; changing language creates an independent summary and preserves the old one.
 
-1. 四个旧名称统一加 `cgz-` 前缀：`focused-discussion`、`archive-session`、`focused-reading`、`daily-recap`。`cgz-init` 保持原名。检查旧安装入口，按上方新名称安装，避免新旧副本同时加载。
-2. 更新完整 skill 目录，保留本地修改再迁移；不要只换 `SKILL.md`。marketplace 安装在 `/plugin` 中检查更新。
-3. 在项目中运行新版 init，补齐本地身份和团队协议。已有规则与新协议冲突时先确认，不自动替换；再次运行不更换有效身份或重复追加说明。
-4. 历史日志、单文件归档和旧索引保留并兼容读取，不自动搬移或删除。新记录改用随机 ID 独立文件，候选教训不再自动写到共享日志顶部。
-5. **Obsidian 集成要求已移除**。旧 vault 配置保留但不读取、不使用。复盘写项目内 `docs/daily/`，不写外部 vault，不要求安装 Obsidian。
+These are file-handling instructions executed by the agent. They do not provide an account system, background service, synchronization service, or automatic Git merging. Independent filenames reduce shared-file contention; they do not guarantee conflict-free collaboration.
 
-版本详情见 [2.0.0 变更记录](CHANGELOG.md)。版本文件与日志不等同于 Git tag 或 GitHub Release，是否发布以仓库实际状态为准。
+## Upgrading from 2.0 to 2.1
 
-## 验证范围与限制
+Update the complete skill directories, then run `cgz-init` to confirm and save the missing `document_language`. Preserve your existing author alias and UUID. Already configured preferences remain in place unless you explicitly ask to change them. Resolve any missing shared-file language separately from your personal preference. Existing files stay intact; there is no automatic translation or history migration.
 
-- Python 校验器检查 5 个 skill 的基础规范；25 项测试覆盖工具回归、元数据模板与文本契约。
-- 文本契约通过不代表实际宿主一定正确执行。**真实双人、多会话、不同 worktree 的宿主端到端验收尚未执行**，见[人工验收清单](docs/team-acceptance.md)。
-- 本仓库主要提供说明型技能，由宿主 agent 按需执行。没有后台文件监听、自动同步、账号认证或自动 Git 合并，也不会自动训练模型。
-- Obsidian 接入未实测且不作为当前支持功能。使用任何宿主时仍受其权限与确认机制约束。
+The repository homepage is now English. The complete Chinese guide is [README.zh-CN.md](README.zh-CN.md); the old [README.en.md](README.en.md) URL remains a compatibility entry. At the time of this update, [v2.0.0](https://github.com/sakanaovo/cgzskill/releases/tag/v2.0.0) is the published release and does not include the language feature. This change prepares 2.1.0; no `v2.1.0` tag or release has been created. The installation prompt uses the current `main`, so verify that it contains this update before expecting the new behavior.
 
-本地检查：
+## Upgrading from 1.x
+
+- Four skill and plugin names now have the `cgz-` prefix: `focused-discussion`, `focused-reading`, `archive-session`, and `daily-recap`. Update old installation entries and command references to their names shown above. `cgz-init` keeps its name.
+- `cgz-all` installs all five skills together. Review old installed plugins before choosing the bundle so both versions are not loaded at once.
+- Daily recaps now write ordinary Markdown to the project's `docs/daily/`. Core workflows no longer ask for an Obsidian vault or write into one. Existing vault configuration is preserved but not used; Obsidian integration has not been validated.
+- Existing identities, rules, and historical records remain in place. There is no automatic migration or cleanup. New records use the independent UUID format; an old shared-file archive convention needs confirmation before switching new writes to an independent directory.
+
+See [CHANGELOG.md](CHANGELOG.md) for release details.
+
+## Repository and validation
+
+Each skill has a `SKILL.md` entry point and a `references/` document with its detailed rules. `cgz-init/assets/` contains the project templates, and `agents/openai.yaml` supplies host metadata. The marketplace manifest is [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json).
+
+Run the repository checks with Python and PyYAML installed:
 
 ```bash
-python3 -m pip install pyyaml
-python3 .github/scripts/validate_skills.py
-python3 -m unittest discover -s tests -v
+python .github/scripts/validate_skills.py
+python -m unittest discover -s tests -v
 ```
 
-## 目录与贡献
+The tooling and contract tests check repository content and helper behavior; they do not execute the skills inside Claude Code or Codex. Real-host multi-user and multilingual scenarios have not been run, so the test suite is not evidence of end-to-end team compatibility or support for every language.
 
-- `skills/`：五个入口、各自规范和初始化模板。
-- `.claude-plugin/marketplace.json`：五个独立 plugin 与 `cgz-all`。
-- `.github/`、`tests/`：校验脚本、回归与契约测试、CI。
-- `scripts/bump.py`：版本与 CHANGELOG 同步工具。
-- [CONTRIBUTING.md](CONTRIBUTING.md)：贡献要求与发布流程。
-
-每个 skill 的规范遵循五原则、五维度、五心理学、对话严苛规则、语言纯化规则。欢迎报告可复现的工作流问题或提交有真实使用场景的改进。
+For the workflow design, see [the architecture notes](docs/ai-self-evolution-architecture.md). Contributions and issue reports are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md) for naming, structure, and release conventions.
 
 ## License
 

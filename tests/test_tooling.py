@@ -150,7 +150,7 @@ class DailyRecapContractTests(unittest.TestCase):
                 self.assertNotIn("禁止读 archives 之外", text)
 
     def test_readme_does_not_install_only_the_entry_file(self):
-        text = (ROOT / "README.md").read_text(encoding="utf-8")
+        text = (ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
         self.assertNotIn("cat skills/cgz-focused-discussion/SKILL.md >>", text)
         self.assertIn("保留完整 skill 目录", text)
 
