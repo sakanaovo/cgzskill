@@ -1,160 +1,182 @@
-# cgzskill
+# cgzskill：面向 AI 助手与编程工具的项目记忆技能
 
-> `sakanaovo` 的个人 Claude Code skill **marketplace**。
->
-> 一条命令加 marketplace,然后挑想要的 skill 单独装。
+[English](README.en.md) · [更新记录](CHANGELOG.md) · [贡献指南](CONTRIBUTING.md) · [团队验收清单](docs/team-acceptance.md)
 
----
+**让 AI 阅读和讨论更聚焦，让会话归档、团队交接和每日复盘有据可查。**
 
-## 这是什么
+cgzskill 是一套以中文工作流为主、面向支持 [Agent Skills](https://agentskills.io/specification) 的 AI 助手与编程工具的项目记忆技能。包含 5 个独立技能；Claude Code marketplace 另提供全套安装包 `cgz-all`。下方以 Claude Code 和 Codex 演示安装，不限定适用宿主；其他工具须按其技能规范适配，未逐一实测。
 
-一个符合 [Agent Skills 规范](https://agentskills.io/specification) 的 Claude Code **marketplace** —— 我自己反复打磨的工作流 skill 集合,每个 skill 作为一个独立可安装的 plugin 列在 marketplace 下。
+**版本：2.0.0。** 项目记忆保存在可审查的 Markdown 文件中。团队成员各自写独立记录，再按来源汇总，减少多人争写同一个日志或索引的机会。它不是模型自动学习、账号系统或自动 Git 合并服务。
 
-**为什么有这个仓库:**
+## 五个 skill 分别做什么
 
-- 整理我反复用的 skill,共享出来给同样工作流场景的人用
-- 用 marketplace 形式分发,**用户挑自己要的装,不用整包 clone**
-- 每个 skill 都来自自己的真实使用需求,先解决我自己反复遇到的问题,再整理成可复用的开源版本
+| Skill | 解决的问题 | 你可以这样说 | 输出或行为 |
+| --- | --- | --- | --- |
+| [`cgz-focused-reading`](skills/cgz-focused-reading/SKILL.md) | 读文档、代码、PR 或日志时容易扩题 | “读这个 PR，只说风险” | 只回答当前问题，区分事实、推断和未验证点 |
+| [`cgz-focused-discussion`](skills/cgz-focused-discussion/SKILL.md) | 讨论发散，没问就给多套方案 | “先聚焦这个问题” | 闭合当前议题，不擅自扩展方案、工时和优先级 |
+| [`cgz-archive-session`](skills/cgz-archive-session/SKILL.md) | 长会话或交接丢上下文，多人追加同一日志 | “把这轮归档，给下一位接手” | 带作者、范围、验证状态和来源的独立会话记录 |
+| [`cgz-init`](skills/cgz-init/SKILL.md) | 每个项目都要手动搭记忆目录 | “初始化 cgz，作者别名用 alice” | 一次补齐本地身份与共享协议，保留已有文件 |
+| [`cgz-daily-recap`](skills/cgz-daily-recap/SKILL.md) | 一天多份归档难以回看，重复内容混在一起 | “复盘今天”或“补昨天的复盘” | 按目标日期聚合事实，按来源去重，冲突保留为待确认 |
 
----
+阅读和讨论可直接单独使用。归档、复盘也包含独立使用的最小协议；团队项目用 `cgz-init` 建立统一入口更方便。主动建议写入仍须确认，用户明确要求初始化或归档时按对应 skill 的授权范围执行。
 
-## 当前包含的 skill
+## 让 AI 帮你安装
 
-| Plugin / Skill | 用途 | 自动触发 | 显式触发 |
-|----------------|------|---------|---------|
-| **`cgz-focused-discussion`** | 对话纪律 —— 强制 Claude 单线收敛,禁止一问就甩 ABCD、禁止推理外放、禁止主动塞工时优先级。专治"一对话就跑偏"。 | 用户讨论 PR / 产品 / 架构 / UX 时;或说「跑偏了」「聚焦」「先停一下」「先看反馈」 | `/cgz-focused-discussion` |
-| **`cgz-archive-session`** | 会话归档 —— 对话变长、主题变多、工作完成或准备交接时,把上下文写进项目 docs,禁止新增分析。 | 用户说「归档」「收尾」「先到这」「交接」;或 agent 自检发现上下文过长 / 分支过多时主动建议归档 | `/cgz-archive-session` |
-| **`cgz-focused-reading`** | 专注阅读 —— 看文档、源码、PR、日志、网页、图文和长上下文时只回答当前问题,禁止扩题。 | 用户说「读一下」「看看文档」「理解上下文」「看这个 PR / 日志 / 图文」 | `/cgz-focused-reading` |
-| **`cgz-init`** | 启动检测 —— 在新项目里扫描 `AGENTS.md` / `docs/ai-lessons.md` / `docs/archives/` 是否就位,缺失则经一次身份确认后生成，不要求外部应用配置。一次性操作。 | 用户说「初始化 cgz」「启动 cgz」「让 AI 学这套」;或在新项目首次调用其他 cgz skill 但缺记忆架构时主动建议 | `/cgz-init` |
-| **`cgz-daily-recap`** | 每日复盘 —— 按天聚合当日 `docs/archives/` / `docs/ai-lessons.md` / 会话上下文,写一份项目内 `docs/daily/YYYY-MM-DD-<record_id>.md`，使用普通 Markdown。 | 用户说「今天复盘」「收尾今天」「daily recap」「日报」;或当天首次启动检测到昨天有未复盘归档时主动建议 | `/cgz-daily-recap` |
+把下面这段发给有本地项目访问能力的 AI 编程助手。安装来源是仓库当前 `main`，不要假设存在 `v2.0.0` tag：
 
-> 五个 skill 共用同一份骨架(写在各自 `references/`):**五原则 / 五维度 / 五心理学 / 对话严苛规则 / 语言纯化规则**。SKILL.md 是入口,references 是判定依据。
->
-> **整体设计**:`cgz-init` 在项目里铺好「记忆架构」(AGENTS.md / docs/ai-lessons.md / docs/archives/);`cgz-focused-reading` / `cgz-focused-discussion` / `cgz-archive-session` 在每次会话里读写这套记忆;`cgz-daily-recap` 按天把当日上下文聚合成项目内日复盘，不要求先初始化。AI 不能自动学习,但下次启动读到这些文件就「像学会了」。
-
-> **Obsidian 集成已从核心流程移除**：初始化不问 vault，复盘不读旧 vault 配置，也不向外部目录写入。已有项目配置原样保留。只移除集成要求，保留复盘能力；Obsidian 接入尚未实测，不宣称已支持。
-
-## 团队开箱使用
-
-1. 安装所需 skill，在项目里运行 `/cgz-init`，首次确认作者别名。Git 用户名只是候选，不用 email 识别人；没有 Git 也能使用。
-2. 初始化创建本地 `.cgz/local.json`（随机 `author_id`），仅用 `/.cgz/local.json` 精确忽略；团队协议在 `docs/cgz-memory.md`。已有文件和身份不覆盖，旧记录不搬移。每个工作副本独立身份，不写全局 Git 配置。
-3. 归档写 `docs/archives/YYYY-MM-DD-<record_id>.md`，候选教训写 `docs/lessons/YYYY-MM-DD-<record_id>.md`，复盘写 `docs/daily/YYYY-MM-DD-<record_id>.md`。每次新记录用随机 UUID；作者、日期、分支不是唯一性保证。
-4. 原始记录不可改写或去重删除；修正用新记录引用旧 ID。不会每次追加共享索引、`AGENTS.md` 或 `docs/ai-lessons.md`。后者是稳定规则入口，采纳候选规则须明确确认或团队 PR 审核。
-5. 汇总同义且同范围合并并保留全部来源；互补差异保留，不同范围标范围，同范围矛盾标 `pending`。不采用最后写入覆盖；同来源集合重复复盘不重复计数，也不把日报递归当新来源。
-
-这是 agent 执行的文件协议，不是账号系统、后台监听或自动 Git 合并服务；`author_id` 不是身份认证。初始化授权只涵盖列出的项目骨架和精确忽略项，不读取主目录、不改业务代码、不存密钥。单独安装阅读/讨论无需初始化；归档/复盘各自含最小身份与记录协议。
-
-## 仓库结构
-
-```
-cgzskill/
-├── .claude-plugin/
-│   └── marketplace.json              # Marketplace manifest(列出所有可装 plugin)
-├── .github/
-│   ├── workflows/validate-skills.yml # CI:每次 push / PR 校验 skill spec
-│   ├── scripts/validate_skills.py
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   └── ISSUE_TEMPLATE/{bug_report,skill_request}.md
-├── scripts/
-│   └── bump.py                       # npm 风格版本管理:bump + CHANGELOG + release
-├── docs/
-│   └── ai-self-evolution-architecture.md  # 五个 skill 的闭环说明
-├── skills/
-│   ├── cgz-focused-discussion/
-│   │   ├── SKILL.md                  # 入口:触发、形状、收束句式
-│   │   ├── agents/openai.yaml        # Codex 等 OpenAI 兼容 host 的元数据
-│   │   └── references/discussion-discipline.md  # 判定依据:五大节骨架
-│   ├── cgz-archive-session/
-│   │   ├── SKILL.md
-│   │   ├── agents/openai.yaml
-│   │   └── references/archive-spec.md
-│   ├── cgz-focused-reading/
-│   │   ├── SKILL.md
-│   │   ├── agents/openai.yaml
-│   │   └── references/reading-spec.md
-│   ├── cgz-init/
-│   │   ├── SKILL.md
-│   │   ├── agents/openai.yaml
-│   │   ├── references/init-spec.md
-│   │   └── assets/                   # 生成到用户项目的模板
-│   │       ├── AGENTS.md.template
-│   │       ├── ai-lessons.md.template
-│   │       ├── archives-README.md.template
-│   │       ├── local.json.template
-│   │       └── cgz-memory.md.template
-│   └── cgz-daily-recap/
-│       ├── SKILL.md
-│       ├── agents/openai.yaml
-│       └── references/recap-spec.md
-├── CONTRIBUTING.md                   # 加新 skill 的流程与硬性要求
-├── CHANGELOG.md                      # 版本变更记录
-├── LICENSE                           # MIT
-├── README.md
-└── .gitignore
+```text
+请帮我安装 https://github.com/sakanaovo/cgzskill 当前 main 的技能。先读 README，识别我正在使用的 AI 助手或编程工具，核对其是否支持 Agent Skills，并确认项目级或用户级等宿主支持的安装范围；Claude Code 和 Codex 可参考文中示例，其他宿主按其官方规范处理，不猜路径或命令。按宿主说明安装完整目录（含 references 和 assets），已有同名技能先核对，不覆盖或重复安装。安装后用宿主实际显示的入口引导 cgz-init，保留原项目文件和已有身份。分别核验“宿主已加载技能”和“初始化已完成”，不要把复制成功当作加载成功；没有本地访问权限就给我操作步骤。不要关闭安全限制、运行未经审查的代码或提交凭据。
 ```
 
-每个 skill 的 `references/` 都遵循同一份**五大节骨架**:五原则 / 五维度 / 五心理学 / 对话严苛规则 / 语言纯化规则。新 skill 的 references 必须沿用,见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
+也可按下面的命令自行安装。
 
----
+## 安装示例一：Claude Code
 
-## 安装
+在 **Claude Code 会话里**输入，不是在系统 shell 中执行：
 
-### Claude Code:三种姿势
-
-**A. Marketplace 安装(推荐)**
-
-```bash
+```text
 /plugin marketplace add sakanaovo/cgzskill
 /plugin install cgz-all@cgzskill
 ```
 
-只想装单个 skill 时，把 `cgz-all` 换成对应 plugin 名，例如:
+在需要记忆的项目中调用：
 
-```bash
-/plugin install cgz-focused-discussion@cgzskill
+```text
+/cgz-all:cgz-init
 ```
 
-**B. 本地 plugin-dir 调试(开发模式)**
+首次确认一个作者别名即可；也可以直接说明“作者别名用 alice”。Git 显示名仅作候选，不取邮箱。初始化会展示已有与缺失项，只补齐授权骨架，不覆盖旧身份或项目规则。
+
+随后按需使用：
+
+```text
+/cgz-all:cgz-focused-reading
+/cgz-all:cgz-focused-discussion
+/cgz-all:cgz-archive-session
+/cgz-all:cgz-daily-recap
+```
+
+只装一个技能时，例如：
+
+```text
+/plugin install cgz-archive-session@cgzskill
+/cgz-archive-session:cgz-archive-session
+```
+
+Claude Code 插件命令使用 `/插件名:技能名`，详见[官方插件说明](https://code.claude.com/docs/en/plugins)。不要同时安装全套包和重复的单项包，避免出现重复技能入口。实际可用命令以宿主的技能列表为准。
+
+## 安装示例二：Codex 与其他方式
+
+### Codex：复制完整目录
+
+在终端执行下面的首次安装示例。已有同名目录时先检查本地改动，不盲目覆盖：
 
 ```bash
 git clone https://github.com/sakanaovo/cgzskill.git
+cd cgzskill
+mkdir -p ~/.agents/skills
+cp -Rn skills/cgz-* ~/.agents/skills/
+```
+
+在目标项目里通过 `/skills` 选择技能，或输入 `$cgz-init`。团队也可将选定的完整目录放到项目 `.agents/skills/`，但不要重复安装同名技能。目录与调用方式见 [Codex 官方技能说明](https://developers.openai.com/codex/skills/)。
+
+### Claude Code：本地开发或独立 skill
+
+```bash
+# 在包含该仓库的父目录启动本地插件开发模式
 claude --plugin-dir ./cgzskill
 ```
 
-**C. 退化到 standalone skill(不用 plugin / marketplace)**
+不走 marketplace 时，将所需完整 skill 目录复制到 `~/.claude/skills/` 或目标项目 `.claude/skills/`。这种安装方式的命令没有插件命名空间；以宿主显示的名称为准。
 
-```bash
-cp -r skills/<skill-name> ~/.claude/skills/   # 或项目内的 .claude/skills/
+其他宿主需要**保留完整 skill 目录**，包括 `SKILL.md`、`references/` 和已有 `assets/`，再按其说明适配入口。只拼接 `SKILL.md` 到项目说明会丢失引用。其他宿主的目录、调用入口和能力以其官方说明为准；本仓库未逐一验证，不能由遵循技能规范推定已兼容。
+
+## 初始化后，项目里有什么
+
+```text
+项目根/
+├── .cgz/local.json        # 本工作副本身份，精确忽略 /.cgz/local.json
+├── .gitignore            # 仅补所需的身份忽略项
+├── AGENTS.md             # 共享入口，已有规则保留
+└── docs/
+    ├── cgz-memory.md     # 团队记录协议
+    ├── ai-lessons.md     # 已采纳规则与稳定入口
+    ├── archives/         # 独立会话归档
+    ├── lessons/          # 独立候选教训
+    └── daily/            # 独立日复盘
 ```
 
-> 提交到 Anthropic 官方 marketplace 让 `/plugin install` 直接生效:https://claude.ai/settings/plugins/submit
+每份记录的路径为：
 
-### Codex(OpenAI)/ Cursor / 其他 agent
+- `docs/archives/YYYY-MM-DD-<record_id>.md`
+- `docs/lessons/YYYY-MM-DD-<record_id>.md`
+- `docs/daily/YYYY-MM-DD-<record_id>.md`
 
-Codex 可以把 skill 目录复制到用户级 skill 目录使用:
+`author_id` 是工作副本本地生成的随机 UUID，用于追溯来源，不证明现实身份。每份新记录另有随机 `record_id`；同人多会话也不用作者名或日期充当唯一标识。无 Git 仍可使用，分支和基线 commit 无法获取时不编造。
 
-```bash
-cp -r skills/cgz-focused-discussion ~/.codex/skills/
-cp -r skills/cgz-archive-session ~/.codex/skills/
-cp -r skills/cgz-focused-reading ~/.codex/skills/
-cp -r skills/cgz-init ~/.codex/skills/
-cp -r skills/cgz-daily-recap ~/.codex/skills/
+以下是记录元数据的示意，ID 不能直接复制用于新记录：
+
+```yaml
+record_id: "<每份记录新生成的 UUID>"
+author_id: "<本地随机作者 UUID>"
+author_alias: "alice"
+date: "2026-11-03"
+recorded_at: "2026-11-03T10:00:00+08:00"
+scope: "src/auth/"
+verification: "unverified"
+branch: null
+base_commit: null
+source_ids: []
+supersedes: []
 ```
 
-如果目标 agent 不支持 skill 自动加载，需要保留完整 skill 目录（包括 `SKILL.md`、`references/` 和已有 `assets/`），并按目标 agent 的说明手动适配入口和引用路径。禁止只把 `SKILL.md` 拼接到 `AGENTS.md`：入口依赖的规范和模板不会随文本自动复制。
+## 两个人同时使用时怎么处理
 
-> 不同 agent 对 Agent Skills 的加载方式不完全一致。Claude Code 优先走 plugin / marketplace；Codex 优先复制完整 skill 目录；其他 agent 的手动适配不等于已验证支持。
+- **写入分开**：独立文件、独占创建，不自动追加共享索引、`AGENTS.md` 或 `docs/ai-lessons.md`。已有身份被 Git 跟踪时先警告，不自动删除或改历史。
+- **原始记录保留**：更正写新记录并引用旧 ID，不改写或去重删除原文件。
+- **汇总有规则**：同义且同范围合并来源；互补差异保留；不同范围分别标注；同范围矛盾标 `pending`，等待确认。
+- **规则需采纳**：新的 lesson 是候选。经明确批准或团队 PR 审阅后才更新稳定规则，不能按最后写入时间决定谁正确。
+- **复盘不递归**：只聚合归档、教训和可核实的会话事实，不把旧日报当新来源。同一作者、日期、范围和来源集合没有新事实时复用已有摘要。
 
----
+完整说明见[项目记忆架构](docs/ai-self-evolution-architecture.md)。这些规则减少共享文件冲突的来源，不保证 agent 永不犯错，也不替代 Git review。
 
-## 贡献
+## 从 1.x 升级到 2.0
 
-欢迎 issue / PR。完整流程、五大节骨架要求、命名合规与提交规范见 [`CONTRIBUTING.md`](CONTRIBUTING.md);版本变更记录见 [`CHANGELOG.md`](CHANGELOG.md)。
+这是包含不兼容变化的主版本升级：
 
-每次 push / PR 都会自动跑 `.github/scripts/validate_skills.py`,校验 SKILL.md 是否符合 Agent Skills spec。
+1. 四个旧名称统一加 `cgz-` 前缀：`focused-discussion`、`archive-session`、`focused-reading`、`daily-recap`。`cgz-init` 保持原名。检查旧安装入口，按上方新名称安装，避免新旧副本同时加载。
+2. 更新完整 skill 目录，保留本地修改再迁移；不要只换 `SKILL.md`。marketplace 安装在 `/plugin` 中检查更新。
+3. 在项目中运行新版 init，补齐本地身份和团队协议。已有规则与新协议冲突时先确认，不自动替换；再次运行不更换有效身份或重复追加说明。
+4. 历史日志、单文件归档和旧索引保留并兼容读取，不自动搬移或删除。新记录改用随机 ID 独立文件，候选教训不再自动写到共享日志顶部。
+5. **Obsidian 集成要求已移除**。旧 vault 配置保留但不读取、不使用。复盘写项目内 `docs/daily/`，不写外部 vault，不要求安装 Obsidian。
 
----
+版本详情见 [2.0.0 变更记录](CHANGELOG.md)。版本文件与日志不等同于 Git tag 或 GitHub Release，是否发布以仓库实际状态为准。
+
+## 验证范围与限制
+
+- Python 校验器检查 5 个 skill 的基础规范；25 项测试覆盖工具回归、元数据模板与文本契约。
+- 文本契约通过不代表实际宿主一定正确执行。**真实双人、多会话、不同 worktree 的宿主端到端验收尚未执行**，见[人工验收清单](docs/team-acceptance.md)。
+- 本仓库主要提供说明型技能，由宿主 agent 按需执行。没有后台文件监听、自动同步、账号认证或自动 Git 合并，也不会自动训练模型。
+- Obsidian 接入未实测且不作为当前支持功能。使用任何宿主时仍受其权限与确认机制约束。
+
+本地检查：
+
+```bash
+python3 -m pip install pyyaml
+python3 .github/scripts/validate_skills.py
+python3 -m unittest discover -s tests -v
+```
+
+## 目录与贡献
+
+- `skills/`：五个入口、各自规范和初始化模板。
+- `.claude-plugin/marketplace.json`：五个独立 plugin 与 `cgz-all`。
+- `.github/`、`tests/`：校验脚本、回归与契约测试、CI。
+- `scripts/bump.py`：版本与 CHANGELOG 同步工具。
+- [CONTRIBUTING.md](CONTRIBUTING.md)：贡献要求与发布流程。
+
+每个 skill 的规范遵循五原则、五维度、五心理学、对话严苛规则、语言纯化规则。欢迎报告可复现的工作流问题或提交有真实使用场景的改进。
 
 ## License
 
-MIT
+[MIT](LICENSE)
