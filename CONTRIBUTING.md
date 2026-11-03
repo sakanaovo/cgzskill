@@ -216,4 +216,4 @@ python3 -m unittest discover -s tests -v
 - 原始记录不可变；同义且同范围只在汇总层合并并保留来源，矛盾标 `pending`，采纳规则必须有授权或团队 PR 审核。
 - 每个 plugin 可独立安装，禁止引用其他 plugin 目录里的必需文件；项目 `docs/cgz-memory.md` 不存在时入口仍须有最小流程。
 - 修改协议时同步入口、references、init 模板、README、marketplace 和契约测试。测试区分 Python 工具回归、文本/模板契约与真实 agent 手工验收；不把前两者称为端到端实测。
-- 本轮行为变化先记入 `Unreleased`，不自动发布。独立不可变记录及移除外部 vault 输出改变既有行为，正式发布前由维护者按上文流程决定 major bump。
+- 行为变化先记入 `Unreleased`，通过 `scripts/bump.py` 整理版本。2.0.0 已将独立不可变记录、名称迁移及移除外部 vault 输出作为不兼容变化归档；后续依改动性质决定 bump，版本文件更新不自动创建 Git tag 或 GitHub Release。
